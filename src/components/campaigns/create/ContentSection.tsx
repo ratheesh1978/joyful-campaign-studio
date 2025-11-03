@@ -54,14 +54,14 @@ export function ContentSection({ data, onChange, onNext, onBack }: ContentSectio
             <button
               key={option.id}
               onClick={() => handleContentTypeSelect(option.id)}
-              className={`flex flex-col items-center gap-3 rounded-lg border-2 p-6 text-center transition-all ${
+              className={`flex flex-col items-center gap-3 rounded-lg border-2 p-6 text-center transition-all cursor-pointer hover:shadow-md ${
                 contentType === option.id
-                  ? "border-primary bg-primary/5"
-                  : "border-border hover:border-primary/50"
+                  ? "border-primary bg-primary/5 shadow-sm"
+                  : "border-border hover:border-primary/50 hover:bg-accent/50"
               }`}
             >
               <option.icon
-                className={`h-10 w-10 ${
+                className={`h-10 w-10 transition-colors ${
                   contentType === option.id ? "text-primary" : "text-muted-foreground"
                 }`}
               />

@@ -162,21 +162,23 @@ export function TargetAudienceSection({ data, onChange, onBack }: TargetAudience
             {/* Marketplace Institutes */}
             <TabsContent value="marketplace-institutes" className="space-y-4 mt-4">
               <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 p-2 rounded hover:bg-accent/50 transition-colors cursor-pointer">
                   <Checkbox
                     id="marketplace-active"
                     checked={marketplaceActive}
                     onCheckedChange={(checked) => setMarketplaceActive(checked as boolean)}
+                    className="cursor-pointer"
                   />
-                  <Label htmlFor="marketplace-active" className="cursor-pointer">Active Institutes</Label>
+                  <Label htmlFor="marketplace-active" className="cursor-pointer flex-1">Active Institutes</Label>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 p-2 rounded hover:bg-accent/50 transition-colors cursor-pointer">
                   <Checkbox
                     id="marketplace-inactive"
                     checked={marketplaceInactive}
                     onCheckedChange={(checked) => setMarketplaceInactive(checked as boolean)}
+                    className="cursor-pointer"
                   />
-                  <Label htmlFor="marketplace-inactive" className="cursor-pointer">Inactive Institutes</Label>
+                  <Label htmlFor="marketplace-inactive" className="cursor-pointer flex-1">Inactive Institutes</Label>
                 </div>
               </div>
             </TabsContent>
@@ -202,30 +204,33 @@ export function TargetAudienceSection({ data, onChange, onBack }: TargetAudience
                   <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
                     <Label className="text-sm font-semibold">Status Filters</Label>
                     <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 p-2 rounded hover:bg-accent/50 transition-colors cursor-pointer">
                         <Checkbox
                           id="wl-active"
                           checked={whiteLabelStatus.includes("active")}
                           onCheckedChange={() => handleWhiteLabelStatusToggle("active")}
+                          className="cursor-pointer"
                         />
-                        <Label htmlFor="wl-active" className="cursor-pointer">Active</Label>
+                        <Label htmlFor="wl-active" className="cursor-pointer flex-1">Active</Label>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 p-2 rounded hover:bg-accent/50 transition-colors cursor-pointer">
                         <Checkbox
                           id="wl-inactive"
                           checked={whiteLabelStatus.includes("inactive")}
                           onCheckedChange={() => handleWhiteLabelStatusToggle("inactive")}
+                          className="cursor-pointer"
                         />
-                        <Label htmlFor="wl-inactive" className="cursor-pointer">Inactive</Label>
+                        <Label htmlFor="wl-inactive" className="cursor-pointer flex-1">Inactive</Label>
                       </div>
                       {(whiteLabelPlan === "professional" || whiteLabelPlan === "enterprise") && (
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 p-2 rounded hover:bg-accent/50 transition-colors cursor-pointer">
                           <Checkbox
                             id="wl-expired"
                             checked={whiteLabelStatus.includes("expired")}
                             onCheckedChange={() => handleWhiteLabelStatusToggle("expired")}
+                            className="cursor-pointer"
                           />
-                          <Label htmlFor="wl-expired" className="cursor-pointer">Expired</Label>
+                          <Label htmlFor="wl-expired" className="cursor-pointer flex-1">Expired</Label>
                         </div>
                       )}
                     </div>
@@ -259,13 +264,14 @@ export function TargetAudienceSection({ data, onChange, onBack }: TargetAudience
                   <Label className="text-sm font-semibold">Learner Status</Label>
                   <div className="grid grid-cols-2 gap-2">
                     {["active", "inactive", "expired", "non-subscribed"].map((status) => (
-                      <div key={status} className="flex items-center space-x-2">
+                      <div key={status} className="flex items-center space-x-2 p-2 rounded hover:bg-accent/50 transition-colors cursor-pointer">
                         <Checkbox
                           id={`learner-${status}`}
                           checked={learnerStatus.includes(status)}
                           onCheckedChange={() => handleLearnerStatusToggle(status)}
+                          className="cursor-pointer"
                         />
-                        <Label htmlFor={`learner-${status}`} className="cursor-pointer capitalize">
+                        <Label htmlFor={`learner-${status}`} className="cursor-pointer capitalize flex-1">
                           {status.replace("-", " ")}
                         </Label>
                       </div>
@@ -300,13 +306,14 @@ export function TargetAudienceSection({ data, onChange, onBack }: TargetAudience
                     </div>
                     <div className="space-y-2 max-h-48 overflow-y-auto">
                       {courses.map((course) => (
-                        <div key={course} className="flex items-center space-x-2">
+                        <div key={course} className="flex items-center space-x-2 p-2 rounded hover:bg-accent/50 transition-colors cursor-pointer">
                           <Checkbox
                             id={`course-${course}`}
                             checked={selectedCourses.includes(course)}
                             onCheckedChange={() => handleCourseToggle(course)}
+                            className="cursor-pointer"
                           />
-                          <Label htmlFor={`course-${course}`} className="cursor-pointer">
+                          <Label htmlFor={`course-${course}`} className="cursor-pointer flex-1">
                             {course}
                           </Label>
                         </div>
@@ -329,13 +336,14 @@ export function TargetAudienceSection({ data, onChange, onBack }: TargetAudience
                     </div>
                     <div className="space-y-2 max-h-48 overflow-y-auto">
                       {webinars.map((webinar) => (
-                        <div key={webinar} className="flex items-center space-x-2">
+                        <div key={webinar} className="flex items-center space-x-2 p-2 rounded hover:bg-accent/50 transition-colors cursor-pointer">
                           <Checkbox
                             id={`webinar-${webinar}`}
                             checked={selectedWebinars.includes(webinar)}
                             onCheckedChange={() => handleWebinarToggle(webinar)}
+                            className="cursor-pointer"
                           />
-                          <Label htmlFor={`webinar-${webinar}`} className="cursor-pointer">
+                          <Label htmlFor={`webinar-${webinar}`} className="cursor-pointer flex-1">
                             {webinar}
                           </Label>
                         </div>
@@ -369,8 +377,8 @@ export function TargetAudienceSection({ data, onChange, onBack }: TargetAudience
               return (
                 <div
                   key={trigger.id}
-                  className={`rounded-lg border-2 p-4 transition-all ${
-                    isActive ? "border-primary bg-primary/5" : "border-border"
+                  className={`rounded-lg border-2 p-4 transition-all cursor-pointer hover:shadow-md ${
+                    isActive ? "border-primary bg-primary/5 shadow-sm" : "border-border hover:border-primary/30"
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -380,7 +388,7 @@ export function TargetAudienceSection({ data, onChange, onBack }: TargetAudience
                       onCheckedChange={(checked) =>
                         handleTriggerToggle(trigger.id, checked as boolean)
                       }
-                      className="mt-1"
+                      className="mt-1 cursor-pointer"
                     />
                     <div className="flex-1 space-y-3">
                       <div className="flex items-start gap-3">
@@ -388,7 +396,7 @@ export function TargetAudienceSection({ data, onChange, onBack }: TargetAudience
                         <div className="flex-1">
                           <label
                             htmlFor={trigger.id}
-                            className="font-semibold cursor-pointer"
+                            className="font-semibold cursor-pointer hover:text-primary transition-colors"
                           >
                             {trigger.title}
                           </label>

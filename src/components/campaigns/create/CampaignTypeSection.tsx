@@ -37,25 +37,25 @@ export function CampaignTypeSection({ data, onChange, onNext }: CampaignTypeSect
         <div className="grid grid-cols-2 gap-4">
           <button
             onClick={() => handleTypeChange("email")}
-            className={`flex flex-col items-center gap-3 rounded-lg border-2 p-6 transition-all ${
+            className={`flex flex-col items-center gap-3 rounded-lg border-2 p-6 transition-all cursor-pointer hover:shadow-md ${
               campaignType === "email"
-                ? "border-primary bg-primary/5"
-                : "border-border hover:border-primary/50"
+                ? "border-primary bg-primary/5 shadow-sm"
+                : "border-border hover:border-primary/50 hover:bg-accent/50"
             }`}
           >
-            <Mail className={`h-8 w-8 ${campaignType === "email" ? "text-primary" : "text-muted-foreground"}`} />
+            <Mail className={`h-8 w-8 transition-colors ${campaignType === "email" ? "text-primary" : "text-muted-foreground"}`} />
             <span className="font-semibold">Email Campaign</span>
           </button>
           
           <button
             onClick={() => handleTypeChange("whatsapp")}
-            className={`flex flex-col items-center gap-3 rounded-lg border-2 p-6 transition-all ${
+            className={`flex flex-col items-center gap-3 rounded-lg border-2 p-6 transition-all cursor-pointer hover:shadow-md ${
               campaignType === "whatsapp"
-                ? "border-primary bg-primary/5"
-                : "border-border hover:border-primary/50"
+                ? "border-primary bg-primary/5 shadow-sm"
+                : "border-border hover:border-primary/50 hover:bg-accent/50"
             }`}
           >
-            <MessageSquare className={`h-8 w-8 ${campaignType === "whatsapp" ? "text-primary" : "text-muted-foreground"}`} />
+            <MessageSquare className={`h-8 w-8 transition-colors ${campaignType === "whatsapp" ? "text-primary" : "text-muted-foreground"}`} />
             <span className="font-semibold">WhatsApp Campaign</span>
           </button>
         </div>
