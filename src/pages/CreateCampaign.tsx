@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { CampaignTypeSection } from "@/components/campaigns/create/CampaignTypeSection";
 import { ContentSection } from "@/components/campaigns/create/ContentSection";
 import { TargetAudienceSection } from "@/components/campaigns/create/TargetAudienceSection";
+import { ScheduleAutomationSection } from "@/components/campaigns/create/ScheduleAutomationSection";
 import { useToast } from "@/hooks/use-toast";
 
 export default function CreateCampaign() {
@@ -23,9 +24,10 @@ export default function CreateCampaign() {
   });
 
   const steps = [
-    { id: 1, name: "Campaign Type" },
-    { id: 2, name: "Content" },
-    { id: 3, name: "Target & Triggers" }
+    { id: 1, name: "Campaign Details" },
+    { id: 2, name: "Target Audience" },
+    { id: 3, name: "Content" },
+    { id: 4, name: "Schedule & Automation" }
   ];
 
   const progress = (currentStep / steps.length) * 100;
@@ -114,7 +116,7 @@ export default function CreateCampaign() {
           )}
           
           {currentStep === 2 && (
-            <ContentSection
+            <TargetAudienceSection
               data={campaignData}
               onChange={(data) => setCampaignData({ ...campaignData, ...data })}
               onNext={() => setCurrentStep(3)}
@@ -123,10 +125,19 @@ export default function CreateCampaign() {
           )}
           
           {currentStep === 3 && (
-            <TargetAudienceSection
+            <ContentSection
               data={campaignData}
               onChange={(data) => setCampaignData({ ...campaignData, ...data })}
+              onNext={() => setCurrentStep(4)}
               onBack={() => setCurrentStep(2)}
+            />
+          )}
+          
+          {currentStep === 4 && (
+            <ScheduleAutomationSection
+              data={campaignData}
+              onChange={(data) => setCampaignData({ ...campaignData, ...data })}
+              onBack={() => setCurrentStep(3)}
             />
           )}
         </div>

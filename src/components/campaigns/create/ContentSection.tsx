@@ -124,7 +124,7 @@ export function ContentSection({ data, onChange, onNext, onBack }: ContentSectio
             Back
           </Button>
           <Button onClick={onNext} disabled={!contentType} className="w-full">
-            Next: Target Audience
+            Next: Schedule & Automation
           </Button>
         </div>
       </CardContent>

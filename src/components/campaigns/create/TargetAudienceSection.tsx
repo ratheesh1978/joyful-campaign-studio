@@ -1,491 +1,332 @@
 import { useState } from "react";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ChevronLeft, Users, Building2, GraduationCap, Zap, Eye, Mail, MessageSquare, MousePointerClick } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Users, Building2 } from "lucide-react";
 
 interface TargetAudienceSectionProps {
   data: any;
   onChange: (data: any) => void;
+  onNext: () => void;
   onBack: () => void;
 }
 
-export function TargetAudienceSection({ data, onChange, onBack }: TargetAudienceSectionProps) {
-  const [activeTab, setActiveTab] = useState("marketplace-institutes");
-  const [triggers, setTriggers] = useState<any[]>([]);
+export function TargetAudienceSection({ data, onChange, onNext, onBack }: TargetAudienceSectionProps) {
+  const [activeTab, setActiveTab] = useState("institutes");
   
-  // Marketplace Institutes State
+  // Institutes filters
   const [marketplaceActive, setMarketplaceActive] = useState(false);
   const [marketplaceInactive, setMarketplaceInactive] = useState(false);
   
-  // White-Label Institutes State
-  const [whiteLabelPlan, setWhiteLabelPlan] = useState("");
-  const [whiteLabelStatus, setWhiteLabelStatus] = useState<string[]>([]);
-  const [whiteLabelShare, setWhiteLabelShare] = useState("");
+  // White-label Basic
+  const [wlBasicActive, setWlBasicActive] = useState(false);
+  const [wlBasicInactive, setWlBasicInactive] = useState(false);
   
-  // Marketplace Learners State
-  const [learnerStatus, setLearnerStatus] = useState<string[]>([]);
-  const [learnerFilterType, setLearnerFilterType] = useState("");
-  const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
-  const [selectedWebinars, setSelectedWebinars] = useState<string[]>([]);
-
-  const triggerOptions = [
-    {
-      id: "mail-opened",
-      title: "On Mail Opened",
-      description: "Send follow-up when recipient opens the email",
-      icon: Eye,
-      emailOnly: true,
-    },
-    {
-      id: "mail-not-opened",
-      title: "On Mail Not Opened",
-      description: "Send reminder if email isn't opened",
-      icon: Mail,
-      emailOnly: true,
-    },
-    {
-      id: "link-clicked",
-      title: "On Link Clicked",
-      description: "Engage users who click links",
-      icon: MousePointerClick,
-      emailOnly: false,
-    },
-    {
-      id: "whatsapp-viewed",
-      title: "On WhatsApp Viewed/Replied",
-      description: "Follow up when message is viewed",
-      icon: MessageSquare,
-      whatsappOnly: true,
-    },
-  ];
-
-  const filteredTriggers = triggerOptions.filter((trigger) => {
-    if (data.type === "email" && trigger.whatsappOnly) return false;
-    if (data.type === "whatsapp" && trigger.emailOnly) return false;
-    return true;
-  });
-
-  const handleTriggerToggle = (triggerId: string, checked: boolean) => {
-    if (checked) {
-      setTriggers([...triggers, { id: triggerId, delay: 1, unit: "days" }]);
-    } else {
-      setTriggers(triggers.filter((t) => t.id !== triggerId));
-    }
-  };
-
-  const updateTriggerDelay = (triggerId: string, delay: number) => {
-    setTriggers(triggers.map((t) => (t.id === triggerId ? { ...t, delay } : t)));
-  };
-
-  const updateTriggerUnit = (triggerId: string, unit: string) => {
-    setTriggers(triggers.map((t) => (t.id === triggerId ? { ...t, unit } : t)));
-  };
-
-  const isTriggerActive = (triggerId: string) => triggers.some((t) => t.id === triggerId);
-  const getTriggerConfig = (triggerId: string) => triggers.find((t) => t.id === triggerId) || { delay: 1, unit: "days" };
-
-  // Mock data
-  const courses = ["Web Development Basics", "Advanced React", "Node.js Mastery", "UI/UX Design", "Digital Marketing"];
-  const webinars = ["SEO Best Practices", "Email Marketing Tips", "Social Media Strategy", "Content Creation", "Analytics Deep Dive"];
-
-  const handleWhiteLabelStatusToggle = (status: string) => {
-    setWhiteLabelStatus(prev =>
-      prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
-    );
-  };
-
-  const handleLearnerStatusToggle = (status: string) => {
-    setLearnerStatus(prev =>
-      prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
-    );
-  };
-
-  const handleCourseToggle = (course: string) => {
-    setSelectedCourses(prev =>
-      prev.includes(course) ? prev.filter(c => c !== course) : [...prev, course]
-    );
-  };
-
-  const handleWebinarToggle = (webinar: string) => {
-    setSelectedWebinars(prev =>
-      prev.includes(webinar) ? prev.filter(w => w !== webinar) : [...prev, webinar]
-    );
-  };
-
-  const handleSelectAllCourses = () => {
-    setSelectedCourses(selectedCourses.length === courses.length ? [] : courses);
-  };
-
-  const handleSelectAllWebinars = () => {
-    setSelectedWebinars(selectedWebinars.length === webinars.length ? [] : webinars);
-  };
+  // White-label Professional
+  const [wlProWithShareActive, setWlProWithShareActive] = useState(false);
+  const [wlProWithShareInactive, setWlProWithShareInactive] = useState(false);
+  const [wlProWithShareExpired, setWlProWithShareExpired] = useState(false);
+  const [wlProWithoutShareActive, setWlProWithoutShareActive] = useState(false);
+  const [wlProWithoutShareInactive, setWlProWithoutShareInactive] = useState(false);
+  const [wlProWithoutShareExpired, setWlProWithoutShareExpired] = useState(false);
+  
+  // White-label Enterprise
+  const [wlEntWithShareActive, setWlEntWithShareActive] = useState(false);
+  const [wlEntWithShareInactive, setWlEntWithShareInactive] = useState(false);
+  const [wlEntWithShareExpired, setWlEntWithShareExpired] = useState(false);
+  const [wlEntWithoutShareActive, setWlEntWithoutShareActive] = useState(false);
+  const [wlEntWithoutShareInactive, setWlEntWithoutShareInactive] = useState(false);
+  const [wlEntWithoutShareExpired, setWlEntWithoutShareExpired] = useState(false);
+  
+  // Learners filters
+  const [learnersActive, setLearnersActive] = useState(false);
+  const [learnersInactive, setLearnersInactive] = useState(false);
+  const [learnersExpired, setLearnersExpired] = useState(false);
 
   return (
-    <div className="space-y-6">
-      {/* Target Audience Section */}
-      <Card className="border-2 backdrop-blur-sm bg-card/50">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5 text-primary" />
-            Select Target Group
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="marketplace-institutes">
-                <Building2 className="mr-2 h-4 w-4" />
-                Marketplace Institutes
-              </TabsTrigger>
-              <TabsTrigger value="white-label">
-                <Building2 className="mr-2 h-4 w-4" />
-                White-Label Institutes
-              </TabsTrigger>
-              <TabsTrigger value="learners">
-                <GraduationCap className="mr-2 h-4 w-4" />
-                Marketplace Learners
-              </TabsTrigger>
-            </TabsList>
+    <Card className="p-6 border-2 backdrop-blur-sm bg-card/50">
+      <h2 className="text-2xl font-semibold mb-6">Select Target Audience</h2>
+      
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-2 mb-6">
+          <TabsTrigger value="institutes" className="flex items-center gap-2">
+            <Building2 className="h-4 w-4" />
+            Institutes
+          </TabsTrigger>
+          <TabsTrigger value="learners" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            Learners
+          </TabsTrigger>
+        </TabsList>
 
-            {/* Marketplace Institutes */}
-            <TabsContent value="marketplace-institutes" className="space-y-4 mt-4">
-              <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
-                <div className="flex items-center space-x-2 p-2 rounded hover:bg-accent/50 transition-colors cursor-pointer">
-                  <Checkbox
-                    id="marketplace-active"
-                    checked={marketplaceActive}
-                    onCheckedChange={(checked) => setMarketplaceActive(checked as boolean)}
-                    className="cursor-pointer"
-                  />
-                  <Label htmlFor="marketplace-active" className="cursor-pointer flex-1">Active Institutes</Label>
-                </div>
-                <div className="flex items-center space-x-2 p-2 rounded hover:bg-accent/50 transition-colors cursor-pointer">
-                  <Checkbox
-                    id="marketplace-inactive"
-                    checked={marketplaceInactive}
-                    onCheckedChange={(checked) => setMarketplaceInactive(checked as boolean)}
-                    className="cursor-pointer"
-                  />
-                  <Label htmlFor="marketplace-inactive" className="cursor-pointer flex-1">Inactive Institutes</Label>
-                </div>
-              </div>
-            </TabsContent>
-
-            {/* White-Label Institutes */}
-            <TabsContent value="white-label" className="space-y-4 mt-4">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label>Select Plan</Label>
-                  <Select value={whiteLabelPlan} onValueChange={setWhiteLabelPlan}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choose plan type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="basic">Basic</SelectItem>
-                      <SelectItem value="professional">Professional</SelectItem>
-                      <SelectItem value="enterprise">Enterprise</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {whiteLabelPlan && (
-                  <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
-                    <Label className="text-sm font-semibold">Status Filters</Label>
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2 p-2 rounded hover:bg-accent/50 transition-colors cursor-pointer">
-                        <Checkbox
-                          id="wl-active"
-                          checked={whiteLabelStatus.includes("active")}
-                          onCheckedChange={() => handleWhiteLabelStatusToggle("active")}
-                          className="cursor-pointer"
-                        />
-                        <Label htmlFor="wl-active" className="cursor-pointer flex-1">Active</Label>
-                      </div>
-                      <div className="flex items-center space-x-2 p-2 rounded hover:bg-accent/50 transition-colors cursor-pointer">
-                        <Checkbox
-                          id="wl-inactive"
-                          checked={whiteLabelStatus.includes("inactive")}
-                          onCheckedChange={() => handleWhiteLabelStatusToggle("inactive")}
-                          className="cursor-pointer"
-                        />
-                        <Label htmlFor="wl-inactive" className="cursor-pointer flex-1">Inactive</Label>
-                      </div>
-                      {(whiteLabelPlan === "professional" || whiteLabelPlan === "enterprise") && (
-                        <div className="flex items-center space-x-2 p-2 rounded hover:bg-accent/50 transition-colors cursor-pointer">
-                          <Checkbox
-                            id="wl-expired"
-                            checked={whiteLabelStatus.includes("expired")}
-                            onCheckedChange={() => handleWhiteLabelStatusToggle("expired")}
-                            className="cursor-pointer"
-                          />
-                          <Label htmlFor="wl-expired" className="cursor-pointer flex-1">Expired</Label>
-                        </div>
-                      )}
-                    </div>
-
-                    {(whiteLabelPlan === "professional" || whiteLabelPlan === "enterprise") && (
-                      <>
-                        <Separator className="my-3" />
-                        <div className="space-y-2">
-                          <Label className="text-sm">Share Options</Label>
-                          <Select value={whiteLabelShare} onValueChange={setWhiteLabelShare}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select share option" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="with-share">With Share</SelectItem>
-                              <SelectItem value="without-share">Without Share</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                )}
-              </div>
-            </TabsContent>
-
-            {/* Marketplace Learners */}
-            <TabsContent value="learners" className="space-y-4 mt-4">
-              <div className="space-y-4">
-                <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
-                  <Label className="text-sm font-semibold">Learner Status</Label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {["active", "inactive", "expired", "non-subscribed"].map((status) => (
-                      <div key={status} className="flex items-center space-x-2 p-2 rounded hover:bg-accent/50 transition-colors cursor-pointer">
-                        <Checkbox
-                          id={`learner-${status}`}
-                          checked={learnerStatus.includes(status)}
-                          onCheckedChange={() => handleLearnerStatusToggle(status)}
-                          className="cursor-pointer"
-                        />
-                        <Label htmlFor={`learner-${status}`} className="cursor-pointer capitalize flex-1">
-                          {status.replace("-", " ")}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Filter by Content</Label>
-                  <Select value={learnerFilterType} onValueChange={setLearnerFilterType}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select filter type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="course">By Course</SelectItem>
-                      <SelectItem value="webinar">By Webinar</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {learnerFilterType === "course" && (
-                  <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-sm font-semibold">Select Courses</Label>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={handleSelectAllCourses}
-                      >
-                        {selectedCourses.length === courses.length ? "Deselect All" : "Select All"}
-                      </Button>
-                    </div>
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
-                      {courses.map((course) => (
-                        <div key={course} className="flex items-center space-x-2 p-2 rounded hover:bg-accent/50 transition-colors cursor-pointer">
-                          <Checkbox
-                            id={`course-${course}`}
-                            checked={selectedCourses.includes(course)}
-                            onCheckedChange={() => handleCourseToggle(course)}
-                            className="cursor-pointer"
-                          />
-                          <Label htmlFor={`course-${course}`} className="cursor-pointer flex-1">
-                            {course}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {learnerFilterType === "webinar" && (
-                  <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-sm font-semibold">Select Webinars</Label>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={handleSelectAllWebinars}
-                      >
-                        {selectedWebinars.length === webinars.length ? "Deselect All" : "Select All"}
-                      </Button>
-                    </div>
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
-                      {webinars.map((webinar) => (
-                        <div key={webinar} className="flex items-center space-x-2 p-2 rounded hover:bg-accent/50 transition-colors cursor-pointer">
-                          <Checkbox
-                            id={`webinar-${webinar}`}
-                            checked={selectedWebinars.includes(webinar)}
-                            onCheckedChange={() => handleWebinarToggle(webinar)}
-                            className="cursor-pointer"
-                          />
-                          <Label htmlFor={`webinar-${webinar}`} className="cursor-pointer flex-1">
-                            {webinar}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
-
-      {/* Trigger Automation Section */}
-      <Card className="border-2 backdrop-blur-sm bg-card/50">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Zap className="h-5 w-5 text-primary" />
-            Add Automated Triggers
-          </CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Set up automatic follow-ups based on recipient actions
-          </p>
-        </CardHeader>
-        <CardContent className="space-y-6">
+        <TabsContent value="institutes" className="space-y-6">
+          {/* Marketplace Institutes */}
           <div className="space-y-4">
-            {filteredTriggers.map((trigger) => {
-              const isActive = isTriggerActive(trigger.id);
-              const config = getTriggerConfig(trigger.id);
-
-              return (
-                <div
-                  key={trigger.id}
-                  className={`rounded-lg border-2 p-4 transition-all cursor-pointer hover:shadow-md ${
-                    isActive ? "border-primary bg-primary/5 shadow-sm" : "border-border hover:border-primary/30"
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <Checkbox
-                      id={trigger.id}
-                      checked={isActive}
-                      onCheckedChange={(checked) =>
-                        handleTriggerToggle(trigger.id, checked as boolean)
-                      }
-                      className="mt-1 cursor-pointer"
-                    />
-                    <div className="flex-1 space-y-3">
-                      <div className="flex items-start gap-3">
-                        <trigger.icon className="h-5 w-5 text-primary" />
-                        <div className="flex-1">
-                          <label
-                            htmlFor={trigger.id}
-                            className="font-semibold cursor-pointer hover:text-primary transition-colors"
-                          >
-                            {trigger.title}
-                          </label>
-                          <p className="text-xs text-muted-foreground">
-                            {trigger.description}
-                          </p>
-                        </div>
-                      </div>
-
-                      {isActive && (
-                        <div className="flex items-center gap-3 rounded-md bg-background p-3">
-                          <Label className="text-xs">Wait time:</Label>
-                          <Input
-                            type="number"
-                            min="1"
-                            value={config.delay}
-                            onChange={(e) =>
-                              updateTriggerDelay(
-                                trigger.id,
-                                parseInt(e.target.value) || 1
-                              )
-                            }
-                            className="w-20"
-                          />
-                          <Select
-                            value={config.unit}
-                            onValueChange={(value) =>
-                              updateTriggerUnit(trigger.id, value)
-                            }
-                          >
-                            <SelectTrigger className="w-32">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="minutes">Minutes</SelectItem>
-                              <SelectItem value="hours">Hours</SelectItem>
-                              <SelectItem value="days">Days</SelectItem>
-                              <SelectItem value="weeks">Weeks</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <span className="text-xs text-muted-foreground">
-                            after event
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            <h3 className="text-lg font-semibold text-primary">Marketplace Institutes</h3>
+            <div className="pl-4 space-y-3">
+              <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+                <Checkbox
+                  id="marketplace-active"
+                  checked={marketplaceActive}
+                  onCheckedChange={(checked) => setMarketplaceActive(checked as boolean)}
+                />
+                <Label htmlFor="marketplace-active" className="cursor-pointer flex-1">
+                  Active Institutes
+                </Label>
+              </div>
+              
+              <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+                <Checkbox
+                  id="marketplace-inactive"
+                  checked={marketplaceInactive}
+                  onCheckedChange={(checked) => setMarketplaceInactive(checked as boolean)}
+                />
+                <Label htmlFor="marketplace-inactive" className="cursor-pointer flex-1">
+                  Inactive Institutes
+                </Label>
+              </div>
+            </div>
           </div>
 
-          {triggers.length > 0 && (
-            <div className="rounded-lg bg-muted/50 p-4">
-              <div className="mb-2 flex items-center gap-2">
-                <Zap className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium">Active Triggers:</span>
+          {/* White-label Institutes */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-primary">White-label Institutes</h3>
+            
+            {/* Basic Plan */}
+            <div className="pl-4 space-y-3">
+              <h4 className="font-medium text-sm text-muted-foreground">Basic Plan</h4>
+              <div className="pl-4 space-y-2">
+                <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+                  <Checkbox
+                    id="wl-basic-active"
+                    checked={wlBasicActive}
+                    onCheckedChange={(checked) => setWlBasicActive(checked as boolean)}
+                  />
+                  <Label htmlFor="wl-basic-active" className="cursor-pointer flex-1">
+                    Active
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+                  <Checkbox
+                    id="wl-basic-inactive"
+                    checked={wlBasicInactive}
+                    onCheckedChange={(checked) => setWlBasicInactive(checked as boolean)}
+                  />
+                  <Label htmlFor="wl-basic-inactive" className="cursor-pointer flex-1">
+                    Inactive
+                  </Label>
+                </div>
               </div>
-              <ul className="space-y-1 text-sm text-muted-foreground">
-                {triggers.map((trigger) => {
-                  const option = triggerOptions.find((o) => o.id === trigger.id);
-                  return (
-                    <li key={trigger.id}>
-                      • {option?.title} - Wait {trigger.delay} {trigger.unit}
-                    </li>
-                  );
-                })}
-              </ul>
             </div>
-          )}
 
-          {triggers.length === 0 && (
-            <div className="rounded-lg bg-muted/30 p-6 text-center">
-              <Zap className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">
-                No automation triggers configured yet. Select triggers above to automate your campaign follow-ups.
-              </p>
+            {/* Professional Plan */}
+            <div className="pl-4 space-y-3">
+              <h4 className="font-medium text-sm text-muted-foreground">Professional Plan</h4>
+              
+              {/* With Share */}
+              <div className="pl-4 space-y-2">
+                <p className="text-xs font-medium text-muted-foreground">With Share</p>
+                <div className="pl-4 space-y-2">
+                  <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+                    <Checkbox
+                      id="wl-pro-share-active"
+                      checked={wlProWithShareActive}
+                      onCheckedChange={(checked) => setWlProWithShareActive(checked as boolean)}
+                    />
+                    <Label htmlFor="wl-pro-share-active" className="cursor-pointer flex-1">
+                      Active
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+                    <Checkbox
+                      id="wl-pro-share-inactive"
+                      checked={wlProWithShareInactive}
+                      onCheckedChange={(checked) => setWlProWithShareInactive(checked as boolean)}
+                    />
+                    <Label htmlFor="wl-pro-share-inactive" className="cursor-pointer flex-1">
+                      Inactive
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+                    <Checkbox
+                      id="wl-pro-share-expired"
+                      checked={wlProWithShareExpired}
+                      onCheckedChange={(checked) => setWlProWithShareExpired(checked as boolean)}
+                    />
+                    <Label htmlFor="wl-pro-share-expired" className="cursor-pointer flex-1">
+                      Expired
+                    </Label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Without Share */}
+              <div className="pl-4 space-y-2">
+                <p className="text-xs font-medium text-muted-foreground">Without Share</p>
+                <div className="pl-4 space-y-2">
+                  <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+                    <Checkbox
+                      id="wl-pro-noshare-active"
+                      checked={wlProWithoutShareActive}
+                      onCheckedChange={(checked) => setWlProWithoutShareActive(checked as boolean)}
+                    />
+                    <Label htmlFor="wl-pro-noshare-active" className="cursor-pointer flex-1">
+                      Active
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+                    <Checkbox
+                      id="wl-pro-noshare-inactive"
+                      checked={wlProWithoutShareInactive}
+                      onCheckedChange={(checked) => setWlProWithoutShareInactive(checked as boolean)}
+                    />
+                    <Label htmlFor="wl-pro-noshare-inactive" className="cursor-pointer flex-1">
+                      Inactive
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+                    <Checkbox
+                      id="wl-pro-noshare-expired"
+                      checked={wlProWithoutShareExpired}
+                      onCheckedChange={(checked) => setWlProWithoutShareExpired(checked as boolean)}
+                    />
+                    <Label htmlFor="wl-pro-noshare-expired" className="cursor-pointer flex-1">
+                      Expired
+                    </Label>
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
-        </CardContent>
-      </Card>
 
-      {/* Navigation Button */}
-      <div className="flex gap-3">
-        <Button variant="outline" onClick={onBack} className="w-full">
-          <ChevronLeft className="mr-2 h-4 w-4" />
+            {/* Enterprise Plan */}
+            <div className="pl-4 space-y-3">
+              <h4 className="font-medium text-sm text-muted-foreground">Enterprise Plan</h4>
+              
+              {/* With Share */}
+              <div className="pl-4 space-y-2">
+                <p className="text-xs font-medium text-muted-foreground">With Share</p>
+                <div className="pl-4 space-y-2">
+                  <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+                    <Checkbox
+                      id="wl-ent-share-active"
+                      checked={wlEntWithShareActive}
+                      onCheckedChange={(checked) => setWlEntWithShareActive(checked as boolean)}
+                    />
+                    <Label htmlFor="wl-ent-share-active" className="cursor-pointer flex-1">
+                      Active
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+                    <Checkbox
+                      id="wl-ent-share-inactive"
+                      checked={wlEntWithShareInactive}
+                      onCheckedChange={(checked) => setWlEntWithShareInactive(checked as boolean)}
+                    />
+                    <Label htmlFor="wl-ent-share-inactive" className="cursor-pointer flex-1">
+                      Inactive
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+                    <Checkbox
+                      id="wl-ent-share-expired"
+                      checked={wlEntWithShareExpired}
+                      onCheckedChange={(checked) => setWlEntWithShareExpired(checked as boolean)}
+                    />
+                    <Label htmlFor="wl-ent-share-expired" className="cursor-pointer flex-1">
+                      Expired
+                    </Label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Without Share */}
+              <div className="pl-4 space-y-2">
+                <p className="text-xs font-medium text-muted-foreground">Without Share</p>
+                <div className="pl-4 space-y-2">
+                  <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+                    <Checkbox
+                      id="wl-ent-noshare-active"
+                      checked={wlEntWithoutShareActive}
+                      onCheckedChange={(checked) => setWlEntWithoutShareActive(checked as boolean)}
+                    />
+                    <Label htmlFor="wl-ent-noshare-active" className="cursor-pointer flex-1">
+                      Active
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+                    <Checkbox
+                      id="wl-ent-noshare-inactive"
+                      checked={wlEntWithoutShareInactive}
+                      onCheckedChange={(checked) => setWlEntWithoutShareInactive(checked as boolean)}
+                    />
+                    <Label htmlFor="wl-ent-noshare-inactive" className="cursor-pointer flex-1">
+                      Inactive
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+                    <Checkbox
+                      id="wl-ent-noshare-expired"
+                      checked={wlEntWithoutShareExpired}
+                      onCheckedChange={(checked) => setWlEntWithoutShareExpired(checked as boolean)}
+                    />
+                    <Label htmlFor="wl-ent-noshare-expired" className="cursor-pointer flex-1">
+                      Expired
+                    </Label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="learners" className="space-y-4">
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+              <Checkbox
+                id="learners-active"
+                checked={learnersActive}
+                onCheckedChange={(checked) => setLearnersActive(checked as boolean)}
+              />
+              <Label htmlFor="learners-active" className="cursor-pointer flex-1">
+                Active Learners
+              </Label>
+            </div>
+            
+            <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+              <Checkbox
+                id="learners-inactive"
+                checked={learnersInactive}
+                onCheckedChange={(checked) => setLearnersInactive(checked as boolean)}
+              />
+              <Label htmlFor="learners-inactive" className="cursor-pointer flex-1">
+                Inactive Learners
+              </Label>
+            </div>
+
+            <div className="flex items-center space-x-2 cursor-pointer hover:bg-accent/50 p-2 rounded-md transition-colors">
+              <Checkbox
+                id="learners-expired"
+                checked={learnersExpired}
+                onCheckedChange={(checked) => setLearnersExpired(checked as boolean)}
+              />
+              <Label htmlFor="learners-expired" className="cursor-pointer flex-1">
+                Expired Learners
+              </Label>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      <div className="flex justify-between pt-6 border-t mt-6">
+        <Button variant="outline" onClick={onBack}>
           Back
         </Button>
+        <Button onClick={onNext} size="lg">
+          Next: Select Content
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 }
