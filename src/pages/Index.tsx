@@ -2,12 +2,14 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Mail, MessageSquare, Plus, Users, Send, Eye, MousePointerClick, XCircle, UserX } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { StatCard } from "@/components/campaigns/StatCard";
 import { CampaignCard } from "@/components/campaigns/CampaignCard";
 import { PerformanceChart } from "@/components/campaigns/PerformanceChart";
 import { EngagementChart } from "@/components/campaigns/EngagementChart";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("email");
 
   const emailStats = {
@@ -102,7 +104,7 @@ const Index = () => {
               </TabsTrigger>
             </TabsList>
           </Tabs>
-          <Button className="gap-2">
+          <Button className="gap-2" onClick={() => navigate("/create-campaign")}>
             <Plus className="h-4 w-4" />
             Create {activeTab === "email" ? "Email" : "WhatsApp"} Campaign
           </Button>
