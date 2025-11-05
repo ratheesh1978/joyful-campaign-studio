@@ -4,9 +4,14 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Plus, ChevronRight } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Plus, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
 import { AutomationRule } from "@/types/automation";
 import { AutomationRuleComponent } from "./AutomationRule";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface AutomationTabProps {
   data: any;
@@ -27,6 +32,7 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
     }
   ]);
   const [exitConditionOpen, setExitConditionOpen] = useState(false);
+  const [endDate, setEndDate] = useState<Date>();
 
   const addRule = () => {
     const newRule: AutomationRule = {
@@ -108,6 +114,47 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
             </div>
           </div>
 
+          {/* End Date */}
+          <div className="border rounded-lg p-4">
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-semibold text-foreground">Automation End Date</h3>
+                <p className="text-sm text-muted-foreground">Set when this automation should stop running</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <Label htmlFor="end-date" className="text-sm">End Date (Optional)</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-[240px] justify-start text-left font-normal",
+                        !endDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {endDate ? format(endDate, "PPP") : "Pick a date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={endDate}
+                      onSelect={setEndDate}
+                      disabled={(date) => date < new Date()}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                {endDate && (
+                  <Button variant="ghost" size="sm" onClick={() => setEndDate(undefined)}>
+                    Clear
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+
           {/* Automation Rules */}
           <div className="space-y-4">
             {rules.map((rule) => (
@@ -181,6 +228,25 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
                   <Label htmlFor="attends-webinar" className="font-normal cursor-pointer">Attends webinar(s)</Label>
                 </div>
                 <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="coupon-inactive" id="coupon-inactive" />
+                <Label htmlFor="coupon-inactive" className="font-normal cursor-pointer">When coupon becomes inactive</Label>
+              </div>
+              <div className="flex items-center space-x-2 justify-between">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="purchases-product" id="purchases-product" />
+                  <Label htmlFor="purchases-product" className="font-normal cursor-pointer">Purchases specific product(s)</Label>
+                </div>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="subscription-cancelled" id="subscription-cancelled" />
+                <Label htmlFor="subscription-cancelled" className="font-normal cursor-pointer">Cancels subscription</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="unsubscribes" id="unsubscribes" />
+                <Label htmlFor="unsubscribes" className="font-normal cursor-pointer">Unsubscribes from emails</Label>
               </div>
             </RadioGroup>
           </div>
