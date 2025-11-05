@@ -55,8 +55,8 @@ export function AutomationRuleComponent({
             name: `Sub-Rule ${(automation.subAutomations?.length || 0) + 1}`,
             active: true,
             trigger: "not-opened",
-            waitDays: 3,
-            channel: "email",
+            waitDays: 1,
+            timeUnit: "days",
             message: "",
             subAutomations: []
           };
@@ -136,7 +136,7 @@ export function AutomationRuleComponent({
 
       {isExpanded && (
         <>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor={`trigger-${rule.id}`}>Trigger Condition</Label>
               <Select
@@ -156,32 +156,30 @@ export function AutomationRuleComponent({
             </div>
 
             <div>
-              <Label htmlFor={`wait-${rule.id}`}>Wait (Days)</Label>
-              <Input
-                id={`wait-${rule.id}`}
-                type="number"
-                value={rule.waitDays}
-                onChange={(e) => onUpdate(rule.id, { waitDays: parseInt(e.target.value) || 0 })}
-                className="mt-1.5"
-                min="1"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor={`channel-${rule.id}`}>Channel</Label>
-              <Select
-                value={rule.channel}
-                onValueChange={(value) => onUpdate(rule.id, { channel: value })}
-              >
-                <SelectTrigger id={`channel-${rule.id}`} className="mt-1.5">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-popover z-[100]">
-                  <SelectItem value="email">Email</SelectItem>
-                  <SelectItem value="sms">SMS</SelectItem>
-                  <SelectItem value="push">Push Notification</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label htmlFor={`wait-${rule.id}`}>Delay Period *</Label>
+              <div className="flex gap-2 mt-1.5">
+                <Input
+                  id={`wait-${rule.id}`}
+                  type="number"
+                  value={rule.waitDays}
+                  onChange={(e) => onUpdate(rule.id, { waitDays: parseInt(e.target.value) || 0 })}
+                  min="1"
+                  className="flex-1"
+                />
+                <Select
+                  value={rule.timeUnit}
+                  onValueChange={(value) => onUpdate(rule.id, { timeUnit: value })}
+                >
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-popover z-[100]">
+                    <SelectItem value="minutes">Minutes</SelectItem>
+                    <SelectItem value="hours">Hours</SelectItem>
+                    <SelectItem value="days">Days</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 

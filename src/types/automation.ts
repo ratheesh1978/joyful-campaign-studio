@@ -4,7 +4,7 @@ export interface AutomationRule {
   active: boolean;
   trigger: string;
   waitDays: number;
-  channel: string;
+  timeUnit: string;
   message: string;
   subAutomations?: AutomationRule[];
 }
@@ -15,7 +15,7 @@ export type TriggerCondition =
   | "link-clicked" 
   | "not-clicked";
 
-export type ChannelType = 
-  | "email" 
-  | "sms" 
-  | "push";
+export type TimeUnit = 
+  | "minutes" 
+  | "hours" 
+  | "days";

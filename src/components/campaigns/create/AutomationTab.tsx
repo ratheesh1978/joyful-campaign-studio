@@ -20,8 +20,8 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
       name: "Rule 1",
       active: true,
       trigger: "not-opened",
-      waitDays: 3,
-      channel: "email",
+      waitDays: 1,
+      timeUnit: "days",
       message: "",
       subAutomations: []
     }
@@ -34,8 +34,8 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
       name: `Rule ${rules.length + 1}`,
       active: true,
       trigger: "not-opened",
-      waitDays: 3,
-      channel: "email",
+      waitDays: 1,
+      timeUnit: "days",
       message: "",
       subAutomations: []
     };
@@ -59,8 +59,8 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
             name: `Sub-Rule ${(rule.subAutomations?.length || 0) + 1}`,
             active: true,
             trigger: "not-opened",
-            waitDays: 3,
-            channel: "email",
+            waitDays: 1,
+            timeUnit: "days",
             message: "",
             subAutomations: []
           };
