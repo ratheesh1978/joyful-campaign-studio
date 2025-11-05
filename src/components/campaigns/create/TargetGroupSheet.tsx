@@ -59,7 +59,7 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input placeholder="Search institutes..." className="pl-9" />
                 </div>
-                <div className="mt-3 space-y-2">
+                <RadioGroup className="mt-3 space-y-2">
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="abc" id="abc-institute" />
                     <Label htmlFor="abc-institute" className="font-normal cursor-pointer">ABC Institute</Label>
@@ -72,7 +72,7 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
                     <RadioGroupItem value="tech" id="tech-learning" />
                     <Label htmlFor="tech-learning" className="font-normal cursor-pointer">Tech Learning Center</Label>
                   </div>
-                </div>
+                </RadioGroup>
               </div>
             </CollapsibleContent>
           </Collapsible>
@@ -105,7 +105,7 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input placeholder="Search institutes..." className="pl-9" />
                 </div>
-                <div className="mt-3 space-y-2">
+                <RadioGroup className="mt-3 space-y-2">
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="premium" id="premium-institute" />
                     <Label htmlFor="premium-institute" className="font-normal cursor-pointer">Premium Institute</Label>
@@ -118,7 +118,7 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
                     <RadioGroupItem value="pro" id="pro-learning" />
                     <Label htmlFor="pro-learning" className="font-normal cursor-pointer">Pro Learning Hub</Label>
                   </div>
-                </div>
+                </RadioGroup>
               </div>
             </CollapsibleContent>
           </Collapsible>
@@ -207,7 +207,7 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input placeholder="Search courses..." className="pl-9 h-9 text-sm" />
                   </div>
-                  <div className="space-y-2">
+                  <RadioGroup className="space-y-2">
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="intro-marketing" id="intro-marketing" />
                       <Label htmlFor="intro-marketing" className="text-sm font-normal cursor-pointer">Introduction to Marketing</Label>
@@ -228,7 +228,7 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
                       <RadioGroupItem value="leadership" id="leadership" />
                       <Label htmlFor="leadership" className="text-sm font-normal cursor-pointer">Leadership and Team Building</Label>
                     </div>
-                  </div>
+                  </RadioGroup>
                 </div>
               </div>
 
@@ -246,7 +246,7 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input placeholder="Search webinars..." className="pl-9 h-9 text-sm" />
                   </div>
-                  <div className="space-y-2">
+                  <RadioGroup className="space-y-2">
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="ai-education" id="ai-education" />
                       <Label htmlFor="ai-education" className="text-sm font-normal cursor-pointer">Future of AI in Education</Label>
@@ -267,7 +267,7 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
                       <RadioGroupItem value="student-success" id="student-success" />
                       <Label htmlFor="student-success" className="text-sm font-normal cursor-pointer">Student Success and Retention</Label>
                     </div>
-                  </div>
+                  </RadioGroup>
                 </div>
               </div>
             </CollapsibleContent>
