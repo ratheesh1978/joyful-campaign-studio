@@ -5,14 +5,45 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TargetGroupSheet } from "./TargetGroupSheet";
+import { useToast } from "@/hooks/use-toast";
 
 interface BasicInfoTabProps {
   data: any;
   onChange: (data: any) => void;
+  onNext: () => void;
 }
 
-export function BasicInfoTab({ data, onChange }: BasicInfoTabProps) {
+export function BasicInfoTab({ data, onChange, onNext }: BasicInfoTabProps) {
+  const { toast } = useToast();
   const [isTargetSheetOpen, setIsTargetSheetOpen] = useState(false);
+
+  const handleNext = () => {
+    if (!data.name?.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please enter a campaign name.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!data.senderName?.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please enter a sender name.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!data.senderEmail?.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please select a sender email.",
+        variant: "destructive",
+      });
+      return;
+    }
+    onNext();
+  };
 
   return (
     <div className="space-y-6">
@@ -108,6 +139,12 @@ export function BasicInfoTab({ data, onChange }: BasicInfoTabProps) {
         data={data}
         onChange={onChange}
       />
+
+      <div className="flex justify-end">
+        <Button onClick={handleNext} size="lg">
+          Next
+        </Button>
+      </div>
     </div>
   );
 }

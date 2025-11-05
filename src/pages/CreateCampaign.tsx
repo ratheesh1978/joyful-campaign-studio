@@ -93,6 +93,7 @@ export default function CreateCampaign() {
               <BasicInfoTab
                 data={campaignData}
                 onChange={(data) => setCampaignData({ ...campaignData, ...data })}
+                onNext={() => setActiveTab("content")}
               />
             </TabsContent>
 
@@ -100,6 +101,7 @@ export default function CreateCampaign() {
               <ContentTab
                 data={campaignData}
                 onChange={(data) => setCampaignData({ ...campaignData, ...data })}
+                onNext={() => setActiveTab("automation")}
               />
             </TabsContent>
 

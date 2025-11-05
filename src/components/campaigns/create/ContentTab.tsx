@@ -9,14 +9,38 @@ import { cn } from "@/lib/utils";
 import { TemplateSelector } from "./TemplateSelector";
 import { TemplateBuilder } from "./TemplateBuilder";
 import { EmailPreview } from "./EmailPreview";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 interface ContentTabProps {
   data: any;
   onChange: (data: any) => void;
+  onNext: () => void;
 }
 
-export function ContentTab({ data, onChange }: ContentTabProps) {
+export function ContentTab({ data, onChange, onNext }: ContentTabProps) {
   const [compositionMode, setCompositionMode] = useState("compose");
+  const { toast } = useToast();
+
+  const handleNext = () => {
+    if (!data.subject?.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please enter an email subject.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!data.message?.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please enter a message body.",
+        variant: "destructive",
+      });
+      return;
+    }
+    onNext();
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -108,6 +132,12 @@ export function ContentTab({ data, onChange }: ContentTabProps) {
                 onClose={() => setCompositionMode("compose")}
               />
             )}
+          </div>
+
+          <div className="flex justify-end pt-4">
+            <Button onClick={handleNext} size="lg">
+              Next
+            </Button>
           </div>
         </div>
       </Card>
