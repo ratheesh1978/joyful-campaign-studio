@@ -2,27 +2,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Plus, Trash2, Mail, ChevronRight } from "lucide-react";
+import { Plus, ChevronRight } from "lucide-react";
+import { AutomationRule } from "@/types/automation";
+import { AutomationRuleComponent } from "./AutomationRule";
 
 interface AutomationTabProps {
   data: any;
   onChange: (data: any) => void;
-}
-
-interface AutomationRule {
-  id: string;
-  name: string;
-  active: boolean;
-  trigger: string;
-  waitDays: number;
-  channel: string;
-  message: string;
 }
 
 export function AutomationTab({ data, onChange }: AutomationTabProps) {
@@ -34,7 +22,8 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
       trigger: "not-opened",
       waitDays: 3,
       channel: "email",
-      message: ""
+      message: "",
+      subAutomations: []
     }
   ]);
   const [exitConditionOpen, setExitConditionOpen] = useState(false);
@@ -47,7 +36,8 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
       trigger: "not-opened",
       waitDays: 3,
       channel: "email",
-      message: ""
+      message: "",
+      subAutomations: []
     };
     setRules([...rules, newRule]);
   };
@@ -58,6 +48,41 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
 
   const updateRule = (id: string, updates: Partial<AutomationRule>) => {
     setRules(rules.map(rule => rule.id === id ? { ...rule, ...updates } : rule));
+  };
+
+  const addSubAutomation = (parentId: string) => {
+    const addSubToRule = (rulesList: AutomationRule[]): AutomationRule[] => {
+      return rulesList.map(rule => {
+        if (rule.id === parentId) {
+          const newSubAutomation: AutomationRule = {
+            id: `${Date.now()}-${Math.random()}`,
+            name: `Sub-Rule ${(rule.subAutomations?.length || 0) + 1}`,
+            active: true,
+            trigger: "not-opened",
+            waitDays: 3,
+            channel: "email",
+            message: "",
+            subAutomations: []
+          };
+          
+          return {
+            ...rule,
+            subAutomations: [...(rule.subAutomations || []), newSubAutomation]
+          };
+        }
+        
+        if (rule.subAutomations && rule.subAutomations.length > 0) {
+          return {
+            ...rule,
+            subAutomations: addSubToRule(rule.subAutomations)
+          };
+        }
+        
+        return rule;
+      });
+    };
+    
+    setRules(addSubToRule(rules));
   };
 
   return (
@@ -86,97 +111,14 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
           {/* Automation Rules */}
           <div className="space-y-4">
             {rules.map((rule) => (
-              <div key={rule.id} className="border rounded-lg p-4 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-primary" />
-                    <span className="font-medium">{rule.name}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-2">
-                      <Label htmlFor={`active-${rule.id}`} className="text-sm">Active</Label>
-                      <Switch
-                        id={`active-${rule.id}`}
-                        checked={rule.active}
-                        onCheckedChange={(checked) => updateRule(rule.id, { active: checked })}
-                      />
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => deleteRule(rule.id)}
-                      className="text-destructive hover:text-destructive"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <Label htmlFor={`trigger-${rule.id}`}>Trigger Condition</Label>
-                    <Select
-                      value={rule.trigger}
-                      onValueChange={(value) => updateRule(rule.id, { trigger: value })}
-                    >
-                      <SelectTrigger id={`trigger-${rule.id}`} className="mt-1.5">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover z-[100]">
-                        <SelectItem value="not-opened">Not Opened</SelectItem>
-                        <SelectItem value="opened">Opened</SelectItem>
-                        <SelectItem value="link-clicked">Link Clicked</SelectItem>
-                        <SelectItem value="not-clicked">Not Clicked</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor={`wait-${rule.id}`}>Wait (Days)</Label>
-                    <Input
-                      id={`wait-${rule.id}`}
-                      type="number"
-                      value={rule.waitDays}
-                      onChange={(e) => updateRule(rule.id, { waitDays: parseInt(e.target.value) || 0 })}
-                      className="mt-1.5"
-                      min="1"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor={`channel-${rule.id}`}>Channel</Label>
-                    <Select
-                      value={rule.channel}
-                      onValueChange={(value) => updateRule(rule.id, { channel: value })}
-                    >
-                      <SelectTrigger id={`channel-${rule.id}`} className="mt-1.5">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover z-[100]">
-                        <SelectItem value="email">Email</SelectItem>
-                        <SelectItem value="sms">SMS</SelectItem>
-                        <SelectItem value="push">Push Notification</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor={`message-${rule.id}`}>Follow-up Message</Label>
-                  <Textarea
-                    id={`message-${rule.id}`}
-                    placeholder="Write your follow-up message here... Use placeholders like {{UserName}} for personalization."
-                    value={rule.message}
-                    onChange={(e) => updateRule(rule.id, { message: e.target.value })}
-                    className="mt-1.5 min-h-[120px]"
-                  />
-                </div>
-
-                <Button variant="outline" size="sm">
-                  <Plus className="h-4 w-4 mr-1" />
-                  Add Sub-Automation
-                </Button>
-              </div>
+              <AutomationRuleComponent
+                key={rule.id}
+                rule={rule}
+                level={0}
+                onUpdate={updateRule}
+                onDelete={deleteRule}
+                onAddSubAutomation={addSubAutomation}
+              />
             ))}
 
             <Button variant="outline" onClick={addRule} className="w-full">
