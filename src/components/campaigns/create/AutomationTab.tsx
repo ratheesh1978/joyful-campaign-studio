@@ -6,7 +6,7 @@ import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetT
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Plus, ChevronRight, ChevronLeft, Calendar as CalendarIcon } from "lucide-react";
+import { Plus, ChevronRight, ChevronDown, Calendar as CalendarIcon } from "lucide-react";
 import { AutomationRule } from "@/types/automation";
 import { AutomationRuleComponent } from "./AutomationRule";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -33,38 +33,15 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
     }
   ]);
   const [exitConditionOpen, setExitConditionOpen] = useState(false);
-  const [detailViewType, setDetailViewType] = useState<string>("");
+  const [expandedCondition, setExpandedCondition] = useState<string>("");
   const [endDate, setEndDate] = useState<Date>();
 
-  const openDetailView = (type: string) => {
-    setDetailViewType(type);
+  const toggleDetailView = (type: string) => {
+    setExpandedCondition(expandedCondition === type ? "" : type);
   };
 
-  const backToMainView = () => {
-    setDetailViewType("");
-  };
-
-  const getDetailViewTitle = () => {
-    switch (detailViewType) {
-      case "enrolls-course":
-        return "Select Courses";
-      case "completes-course":
-        return "Select Courses";
-      case "attends-class":
-        return "Select Live Classes";
-      case "registers-webinar":
-        return "Select Webinars";
-      case "attends-webinar":
-        return "Select Webinars";
-      case "purchases-product":
-        return "Select Products";
-      default:
-        return "Select Items";
-    }
-  };
-
-  const getDetailViewItems = () => {
-    switch (detailViewType) {
+  const getDetailViewItems = (type: string) => {
+    switch (type) {
       case "enrolls-course":
       case "completes-course":
         return ["Introduction to React", "Advanced TypeScript", "Web Design Fundamentals", "Node.js Backend Development", "Mobile App Development"];
@@ -225,32 +202,16 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
       {/* Exit Condition Sheet */}
       <Sheet open={exitConditionOpen} onOpenChange={(open) => {
         setExitConditionOpen(open);
-        if (!open) setDetailViewType(""); // Reset detail view when closing
+        if (!open) setExpandedCondition(""); // Reset expanded view when closing
       }}>
-        <SheetContent side="right" className="w-full sm:max-w-md">
+        <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
           <SheetHeader>
-            <div className="flex items-center gap-2">
-              {detailViewType && (
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-8 w-8"
-                  onClick={backToMainView}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-              )}
-              <SheetTitle>{detailViewType ? getDetailViewTitle() : "Choose exit condition"}</SheetTitle>
-            </div>
-            <SheetDescription className="sr-only">
-              {detailViewType ? "Select specific items for this exit condition" : "Select a condition that will stop the automation"}
-            </SheetDescription>
+            <SheetTitle>Choose exit condition</SheetTitle>
+            <SheetDescription className="sr-only">Select a condition that will stop the automation</SheetDescription>
           </SheetHeader>
 
-          {!detailViewType ? (
-            // Main exit condition list
-            <div className="mt-6 space-y-6">
-              <RadioGroup className="space-y-3">
+          <div className="mt-6 space-y-6">
+            <RadioGroup className="space-y-3">
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="membership-purchase" id="membership-purchase" />
                 <Label htmlFor="membership-purchase" className="font-normal cursor-pointer">On membership purchase</Label>
@@ -259,112 +220,252 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
                 <RadioGroupItem value="membership-renewal" id="membership-renewal" />
                 <Label htmlFor="membership-renewal" className="font-normal cursor-pointer">On membership renewal</Label>
               </div>
-              <div className="flex items-center space-x-2 justify-between">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="enrolls-course" id="enrolls-course" />
-                  <Label htmlFor="enrolls-course" className="font-normal cursor-pointer">Enrolls in course(s)</Label>
+              
+              {/* Enrolls in course */}
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2 justify-between">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="enrolls-course" id="enrolls-course" />
+                    <Label htmlFor="enrolls-course" className="font-normal cursor-pointer">Enrolls in course(s)</Label>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-6 w-6"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleDetailView("enrolls-course");
+                    }}
+                  >
+                    {expandedCondition === "enrolls-course" ? (
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-6 w-6"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    openDetailView("enrolls-course");
-                  }}
-                >
-                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                </Button>
+                {expandedCondition === "enrolls-course" && (
+                  <div className="ml-6 pl-4 border-l space-y-2 py-2">
+                    <Input placeholder="Search courses..." className="mb-2" />
+                    <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                      {getDetailViewItems("enrolls-course").map((item, index) => (
+                        <div key={index} className="flex items-center space-x-2 p-1">
+                          <Checkbox id={`enrolls-${index}`} />
+                          <Label htmlFor={`enrolls-${index}`} className="font-normal cursor-pointer text-sm">
+                            {item}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              <div className="flex items-center space-x-2 justify-between">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="completes-course" id="completes-course" />
-                  <Label htmlFor="completes-course" className="font-normal cursor-pointer">Completes course(s)</Label>
+
+              {/* Completes course */}
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2 justify-between">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="completes-course" id="completes-course" />
+                    <Label htmlFor="completes-course" className="font-normal cursor-pointer">Completes course(s)</Label>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-6 w-6"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleDetailView("completes-course");
+                    }}
+                  >
+                    {expandedCondition === "completes-course" ? (
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-6 w-6"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    openDetailView("completes-course");
-                  }}
-                >
-                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                </Button>
+                {expandedCondition === "completes-course" && (
+                  <div className="ml-6 pl-4 border-l space-y-2 py-2">
+                    <Input placeholder="Search courses..." className="mb-2" />
+                    <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                      {getDetailViewItems("completes-course").map((item, index) => (
+                        <div key={index} className="flex items-center space-x-2 p-1">
+                          <Checkbox id={`completes-${index}`} />
+                          <Label htmlFor={`completes-${index}`} className="font-normal cursor-pointer text-sm">
+                            {item}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              <div className="flex items-center space-x-2 justify-between">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="attends-class" id="attends-class" />
-                  <Label htmlFor="attends-class" className="font-normal cursor-pointer">Attends live class(s)</Label>
+
+              {/* Attends live class */}
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2 justify-between">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="attends-class" id="attends-class" />
+                    <Label htmlFor="attends-class" className="font-normal cursor-pointer">Attends live class(s)</Label>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-6 w-6"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleDetailView("attends-class");
+                    }}
+                  >
+                    {expandedCondition === "attends-class" ? (
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-6 w-6"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    openDetailView("attends-class");
-                  }}
-                >
-                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                </Button>
+                {expandedCondition === "attends-class" && (
+                  <div className="ml-6 pl-4 border-l space-y-2 py-2">
+                    <Input placeholder="Search classes..." className="mb-2" />
+                    <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                      {getDetailViewItems("attends-class").map((item, index) => (
+                        <div key={index} className="flex items-center space-x-2 p-1">
+                          <Checkbox id={`class-${index}`} />
+                          <Label htmlFor={`class-${index}`} className="font-normal cursor-pointer text-sm">
+                            {item}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              <div className="flex items-center space-x-2 justify-between">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="registers-webinar" id="registers-webinar" />
-                  <Label htmlFor="registers-webinar" className="font-normal cursor-pointer">Registers for webinar(s)</Label>
+
+              {/* Registers for webinar */}
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2 justify-between">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="registers-webinar" id="registers-webinar" />
+                    <Label htmlFor="registers-webinar" className="font-normal cursor-pointer">Registers for webinar(s)</Label>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-6 w-6"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleDetailView("registers-webinar");
+                    }}
+                  >
+                    {expandedCondition === "registers-webinar" ? (
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-6 w-6"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    openDetailView("registers-webinar");
-                  }}
-                >
-                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                </Button>
+                {expandedCondition === "registers-webinar" && (
+                  <div className="ml-6 pl-4 border-l space-y-2 py-2">
+                    <Input placeholder="Search webinars..." className="mb-2" />
+                    <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                      {getDetailViewItems("registers-webinar").map((item, index) => (
+                        <div key={index} className="flex items-center space-x-2 p-1">
+                          <Checkbox id={`register-${index}`} />
+                          <Label htmlFor={`register-${index}`} className="font-normal cursor-pointer text-sm">
+                            {item}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              <div className="flex items-center space-x-2 justify-between">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="attends-webinar" id="attends-webinar" />
-                  <Label htmlFor="attends-webinar" className="font-normal cursor-pointer">Attends webinar(s)</Label>
+
+              {/* Attends webinar */}
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2 justify-between">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="attends-webinar" id="attends-webinar" />
+                    <Label htmlFor="attends-webinar" className="font-normal cursor-pointer">Attends webinar(s)</Label>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-6 w-6"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleDetailView("attends-webinar");
+                    }}
+                  >
+                    {expandedCondition === "attends-webinar" ? (
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-6 w-6"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    openDetailView("attends-webinar");
-                  }}
-                >
-                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                </Button>
+                {expandedCondition === "attends-webinar" && (
+                  <div className="ml-6 pl-4 border-l space-y-2 py-2">
+                    <Input placeholder="Search webinars..." className="mb-2" />
+                    <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                      {getDetailViewItems("attends-webinar").map((item, index) => (
+                        <div key={index} className="flex items-center space-x-2 p-1">
+                          <Checkbox id={`attends-${index}`} />
+                          <Label htmlFor={`attends-${index}`} className="font-normal cursor-pointer text-sm">
+                            {item}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
+              
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="coupon-inactive" id="coupon-inactive" />
                 <Label htmlFor="coupon-inactive" className="font-normal cursor-pointer">When coupon becomes inactive</Label>
               </div>
-              <div className="flex items-center space-x-2 justify-between">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="purchases-product" id="purchases-product" />
-                  <Label htmlFor="purchases-product" className="font-normal cursor-pointer">Purchases specific product(s)</Label>
+              
+              {/* Purchases product */}
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2 justify-between">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="purchases-product" id="purchases-product" />
+                    <Label htmlFor="purchases-product" className="font-normal cursor-pointer">Purchases specific product(s)</Label>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-6 w-6"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleDetailView("purchases-product");
+                    }}
+                  >
+                    {expandedCondition === "purchases-product" ? (
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-6 w-6"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    openDetailView("purchases-product");
-                  }}
-                >
-                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                </Button>
+                {expandedCondition === "purchases-product" && (
+                  <div className="ml-6 pl-4 border-l space-y-2 py-2">
+                    <Input placeholder="Search products..." className="mb-2" />
+                    <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                      {getDetailViewItems("purchases-product").map((item, index) => (
+                        <div key={index} className="flex items-center space-x-2 p-1">
+                          <Checkbox id={`product-${index}`} />
+                          <Label htmlFor={`product-${index}`} className="font-normal cursor-pointer text-sm">
+                            {item}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
+              
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="subscription-cancelled" id="subscription-cancelled" />
                 <Label htmlFor="subscription-cancelled" className="font-normal cursor-pointer">Cancels subscription</Label>
@@ -380,37 +481,6 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
               <Button onClick={() => setExitConditionOpen(false)}>Apply</Button>
             </SheetFooter>
           </div>
-          ) : (
-            // Detail view for selecting specific items
-            <div className="mt-6">
-              <Input 
-                placeholder="Search..." 
-                className="mb-4"
-              />
-              
-              <div className="space-y-3 max-h-[400px] overflow-y-auto">
-                {getDetailViewItems().map((item, index) => (
-                  <div key={index} className="flex items-center space-x-2 p-2 hover:bg-accent rounded-md">
-                    <Checkbox id={`item-${index}`} />
-                    <Label 
-                      htmlFor={`item-${index}`} 
-                      className="font-normal cursor-pointer flex-1"
-                    >
-                      {item}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-
-              <SheetFooter className="mt-6">
-                <Button variant="outline" onClick={backToMainView}>Back</Button>
-                <Button onClick={() => {
-                  backToMainView();
-                  setExitConditionOpen(false);
-                }}>Apply Selection</Button>
-              </SheetFooter>
-            </div>
-          )}
         </SheetContent>
       </Sheet>
     </div>
