@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Plus, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
 import { AutomationRule } from "@/types/automation";
@@ -32,7 +33,50 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
     }
   ]);
   const [exitConditionOpen, setExitConditionOpen] = useState(false);
+  const [detailViewOpen, setDetailViewOpen] = useState(false);
+  const [detailViewType, setDetailViewType] = useState<string>("");
   const [endDate, setEndDate] = useState<Date>();
+
+  const openDetailView = (type: string) => {
+    setDetailViewType(type);
+    setDetailViewOpen(true);
+  };
+
+  const getDetailViewTitle = () => {
+    switch (detailViewType) {
+      case "enrolls-course":
+        return "Select Courses";
+      case "completes-course":
+        return "Select Courses";
+      case "attends-class":
+        return "Select Live Classes";
+      case "registers-webinar":
+        return "Select Webinars";
+      case "attends-webinar":
+        return "Select Webinars";
+      case "purchases-product":
+        return "Select Products";
+      default:
+        return "Select Items";
+    }
+  };
+
+  const getDetailViewItems = () => {
+    switch (detailViewType) {
+      case "enrolls-course":
+      case "completes-course":
+        return ["Introduction to React", "Advanced TypeScript", "Web Design Fundamentals", "Node.js Backend Development", "Mobile App Development"];
+      case "attends-class":
+        return ["Monday Morning Session", "Wednesday Evening Workshop", "Friday Advanced Class", "Weekend Masterclass"];
+      case "registers-webinar":
+      case "attends-webinar":
+        return ["Marketing Strategies 2024", "Product Launch Webinar", "Customer Success Workshop", "Sales Techniques Masterclass"];
+      case "purchases-product":
+        return ["Premium Membership", "Starter Package", "Enterprise Solution", "Individual Coaching", "Group Training"];
+      default:
+        return [];
+    }
+  };
 
   const addRule = () => {
     const newRule: AutomationRule = {
@@ -199,35 +243,85 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
                   <RadioGroupItem value="enrolls-course" id="enrolls-course" />
                   <Label htmlFor="enrolls-course" className="font-normal cursor-pointer">Enrolls in course(s)</Label>
                 </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-6 w-6"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    openDetailView("enrolls-course");
+                  }}
+                >
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                </Button>
               </div>
               <div className="flex items-center space-x-2 justify-between">
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="completes-course" id="completes-course" />
                   <Label htmlFor="completes-course" className="font-normal cursor-pointer">Completes course(s)</Label>
                 </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-6 w-6"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    openDetailView("completes-course");
+                  }}
+                >
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                </Button>
               </div>
               <div className="flex items-center space-x-2 justify-between">
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="attends-class" id="attends-class" />
                   <Label htmlFor="attends-class" className="font-normal cursor-pointer">Attends live class(s)</Label>
                 </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-6 w-6"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    openDetailView("attends-class");
+                  }}
+                >
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                </Button>
               </div>
               <div className="flex items-center space-x-2 justify-between">
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="registers-webinar" id="registers-webinar" />
                   <Label htmlFor="registers-webinar" className="font-normal cursor-pointer">Registers for webinar(s)</Label>
                 </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-6 w-6"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    openDetailView("registers-webinar");
+                  }}
+                >
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                </Button>
               </div>
               <div className="flex items-center space-x-2 justify-between">
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="attends-webinar" id="attends-webinar" />
                   <Label htmlFor="attends-webinar" className="font-normal cursor-pointer">Attends webinar(s)</Label>
                 </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-6 w-6"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    openDetailView("attends-webinar");
+                  }}
+                >
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                </Button>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="coupon-inactive" id="coupon-inactive" />
@@ -238,7 +332,17 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
                   <RadioGroupItem value="purchases-product" id="purchases-product" />
                   <Label htmlFor="purchases-product" className="font-normal cursor-pointer">Purchases specific product(s)</Label>
                 </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-6 w-6"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    openDetailView("purchases-product");
+                  }}
+                >
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                </Button>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="subscription-cancelled" id="subscription-cancelled" />
@@ -254,6 +358,42 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
           <SheetFooter className="mt-6">
             <Button variant="outline" onClick={() => setExitConditionOpen(false)}>Cancel</Button>
             <Button onClick={() => setExitConditionOpen(false)}>Apply</Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+
+      {/* Detail View Sheet */}
+      <Sheet open={detailViewOpen} onOpenChange={setDetailViewOpen}>
+        <SheetContent side="right" className="w-full sm:max-w-md">
+          <SheetHeader>
+            <SheetTitle>{getDetailViewTitle()}</SheetTitle>
+            <SheetDescription className="sr-only">Select specific items for this exit condition</SheetDescription>
+          </SheetHeader>
+
+          <div className="mt-6">
+            <Input 
+              placeholder="Search..." 
+              className="mb-4"
+            />
+            
+            <div className="space-y-3 max-h-[400px] overflow-y-auto">
+              {getDetailViewItems().map((item, index) => (
+                <div key={index} className="flex items-center space-x-2 p-2 hover:bg-accent rounded-md">
+                  <Checkbox id={`item-${index}`} />
+                  <Label 
+                    htmlFor={`item-${index}`} 
+                    className="font-normal cursor-pointer flex-1"
+                  >
+                    {item}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <SheetFooter className="mt-6">
+            <Button variant="outline" onClick={() => setDetailViewOpen(false)}>Cancel</Button>
+            <Button onClick={() => setDetailViewOpen(false)}>Apply Selection</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
