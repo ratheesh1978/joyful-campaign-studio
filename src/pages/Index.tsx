@@ -47,6 +47,7 @@ const Index = () => {
 
   const campaigns = [
     {
+      id: 1,
       title: "Q1 2025 New Features Launch",
       date: "Jan 14, 2025",
       status: "SENT" as const,
@@ -57,6 +58,7 @@ const Index = () => {
       openRate: 72.0,
     },
     {
+      id: 2,
       title: "Marketplace User Onboarding",
       date: "Jan 19, 2025",
       status: "SENT" as const,
@@ -67,6 +69,7 @@ const Index = () => {
       openRate: 64.0,
     },
     {
+      id: 3,
       title: "Product Update Newsletter",
       date: "Jan 27, 2025",
       status: "DRAFT" as const,

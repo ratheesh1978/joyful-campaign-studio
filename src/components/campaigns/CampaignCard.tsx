@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Mail, Calendar, Users, TrendingUp, Eye, MousePointerClick } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface CampaignCardProps {
+  id?: number;
   title: string;
   date: string;
   status: "SENT" | "DRAFT" | "SCHEDULED";
@@ -16,6 +18,7 @@ interface CampaignCardProps {
 }
 
 export const CampaignCard = ({
+  id = 1,
   title,
   date,
   status,
@@ -25,6 +28,7 @@ export const CampaignCard = ({
   clicked,
   openRate,
 }: CampaignCardProps) => {
+  const navigate = useNavigate();
   const statusColor = {
     SENT: "bg-success text-success-foreground",
     DRAFT: "bg-muted text-muted-foreground",
@@ -93,7 +97,11 @@ export const CampaignCard = ({
       )}
 
       <div className="flex gap-2">
-        <Button variant="outline" className="flex-1">
+        <Button 
+          variant="outline" 
+          className="flex-1"
+          onClick={() => navigate(`/campaign/${id}`)}
+        >
           View Details
         </Button>
         {status === "DRAFT" && (
