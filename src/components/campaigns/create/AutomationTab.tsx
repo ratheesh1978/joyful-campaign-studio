@@ -211,14 +211,19 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
           </SheetHeader>
 
           <div className="mt-6 space-y-6">
-            <RadioGroup className="space-y-3">
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="membership-purchase" id="membership-purchase" />
-                <Label htmlFor="membership-purchase" className="font-normal cursor-pointer">On membership purchase</Label>
+            <RadioGroup className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="membership-purchase" id="membership-purchase" />
+                  <Label htmlFor="membership-purchase" className="font-normal cursor-pointer">On membership purchase</Label>
+                </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="membership-renewal" id="membership-renewal" />
-                <Label htmlFor="membership-renewal" className="font-normal cursor-pointer">On membership renewal</Label>
+              
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="membership-renewal" id="membership-renewal" />
+                  <Label htmlFor="membership-renewal" className="font-normal cursor-pointer">On membership renewal</Label>
+                </div>
               </div>
               
               {/* Enrolls in course */}
@@ -421,9 +426,11 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
                 )}
               </div>
               
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="coupon-inactive" id="coupon-inactive" />
-                <Label htmlFor="coupon-inactive" className="font-normal cursor-pointer">When coupon becomes inactive</Label>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="coupon-inactive" id="coupon-inactive" />
+                  <Label htmlFor="coupon-inactive" className="font-normal cursor-pointer">When coupon becomes inactive</Label>
+                </div>
               </div>
               
               {/* Purchases product */}
@@ -466,13 +473,18 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
                 )}
               </div>
               
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="subscription-cancelled" id="subscription-cancelled" />
-                <Label htmlFor="subscription-cancelled" className="font-normal cursor-pointer">Cancels subscription</Label>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="subscription-cancelled" id="subscription-cancelled" />
+                  <Label htmlFor="subscription-cancelled" className="font-normal cursor-pointer">Cancels subscription</Label>
+                </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="unsubscribes" id="unsubscribes" />
-                <Label htmlFor="unsubscribes" className="font-normal cursor-pointer">Unsubscribes from emails</Label>
+              
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="unsubscribes" id="unsubscribes" />
+                  <Label htmlFor="unsubscribes" className="font-normal cursor-pointer">Unsubscribes from emails</Label>
+                </div>
               </div>
             </RadioGroup>
 
