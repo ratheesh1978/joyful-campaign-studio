@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Plus, ChevronRight } from "lucide-react";
 import { AutomationRule } from "@/types/automation";
@@ -129,71 +129,73 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
         </div>
       </Card>
 
-      {/* Exit Condition Dialog */}
-      <Dialog open={exitConditionOpen} onOpenChange={setExitConditionOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Choose exit condition</DialogTitle>
-            <DialogDescription className="sr-only">Select a condition that will stop the automation</DialogDescription>
-          </DialogHeader>
+      {/* Exit Condition Sheet */}
+      <Sheet open={exitConditionOpen} onOpenChange={setExitConditionOpen}>
+        <SheetContent side="right" className="w-full sm:max-w-md">
+          <SheetHeader>
+            <SheetTitle>Choose exit condition</SheetTitle>
+            <SheetDescription className="sr-only">Select a condition that will stop the automation</SheetDescription>
+          </SheetHeader>
 
-          <div className="bg-warning/10 border border-warning/20 rounded-lg p-3 text-sm">
-            <p className="text-foreground">Missing an option? Suggest and we'll add it!</p>
-            <ChevronRight className="h-4 w-4 ml-auto" />
+          <div className="mt-6 space-y-6">
+            <div className="bg-warning/10 border border-warning/20 rounded-lg p-3 text-sm">
+              <p className="text-foreground">Missing an option? Suggest and we'll add it!</p>
+              <ChevronRight className="h-4 w-4 ml-auto" />
+            </div>
+
+            <RadioGroup className="space-y-3">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="membership-purchase" id="membership-purchase" />
+                <Label htmlFor="membership-purchase" className="font-normal cursor-pointer">On membership purchase</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="membership-renewal" id="membership-renewal" />
+                <Label htmlFor="membership-renewal" className="font-normal cursor-pointer">On membership renewal</Label>
+              </div>
+              <div className="flex items-center space-x-2 justify-between">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="enrolls-course" id="enrolls-course" />
+                  <Label htmlFor="enrolls-course" className="font-normal cursor-pointer">Enrolls in course(s)</Label>
+                </div>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div className="flex items-center space-x-2 justify-between">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="completes-course" id="completes-course" />
+                  <Label htmlFor="completes-course" className="font-normal cursor-pointer">Completes course(s)</Label>
+                </div>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div className="flex items-center space-x-2 justify-between">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="attends-class" id="attends-class" />
+                  <Label htmlFor="attends-class" className="font-normal cursor-pointer">Attends live class(s)</Label>
+                </div>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div className="flex items-center space-x-2 justify-between">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="registers-webinar" id="registers-webinar" />
+                  <Label htmlFor="registers-webinar" className="font-normal cursor-pointer">Registers for webinar(s)</Label>
+                </div>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div className="flex items-center space-x-2 justify-between">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="attends-webinar" id="attends-webinar" />
+                  <Label htmlFor="attends-webinar" className="font-normal cursor-pointer">Attends webinar(s)</Label>
+                </div>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </div>
+            </RadioGroup>
           </div>
 
-          <RadioGroup className="space-y-3">
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="membership-purchase" id="membership-purchase" />
-              <Label htmlFor="membership-purchase" className="font-normal cursor-pointer">On membership purchase</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="membership-renewal" id="membership-renewal" />
-              <Label htmlFor="membership-renewal" className="font-normal cursor-pointer">On membership renewal</Label>
-            </div>
-            <div className="flex items-center space-x-2 justify-between">
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="enrolls-course" id="enrolls-course" />
-                <Label htmlFor="enrolls-course" className="font-normal cursor-pointer">Enrolls in course(s)</Label>
-              </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            </div>
-            <div className="flex items-center space-x-2 justify-between">
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="completes-course" id="completes-course" />
-                <Label htmlFor="completes-course" className="font-normal cursor-pointer">Completes course(s)</Label>
-              </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            </div>
-            <div className="flex items-center space-x-2 justify-between">
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="attends-class" id="attends-class" />
-                <Label htmlFor="attends-class" className="font-normal cursor-pointer">Attends live class(s)</Label>
-              </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            </div>
-            <div className="flex items-center space-x-2 justify-between">
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="registers-webinar" id="registers-webinar" />
-                <Label htmlFor="registers-webinar" className="font-normal cursor-pointer">Registers for webinar(s)</Label>
-              </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            </div>
-            <div className="flex items-center space-x-2 justify-between">
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="attends-webinar" id="attends-webinar" />
-                <Label htmlFor="attends-webinar" className="font-normal cursor-pointer">Attends webinar(s)</Label>
-              </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            </div>
-          </RadioGroup>
-
-          <DialogFooter>
+          <SheetFooter className="mt-6">
             <Button variant="outline" onClick={() => setExitConditionOpen(false)}>Cancel</Button>
             <Button onClick={() => setExitConditionOpen(false)}>Apply</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
