@@ -138,11 +138,6 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
           </SheetHeader>
 
           <div className="mt-6 space-y-6">
-            <div className="bg-warning/10 border border-warning/20 rounded-lg p-3 text-sm">
-              <p className="text-foreground">Missing an option? Suggest and we'll add it!</p>
-              <ChevronRight className="h-4 w-4 ml-auto" />
-            </div>
-
             <RadioGroup className="space-y-3">
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="membership-purchase" id="membership-purchase" />
