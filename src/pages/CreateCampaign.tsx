@@ -17,6 +17,7 @@ export default function CreateCampaign() {
     name: "",
     senderName: "",
     senderEmail: "",
+    subject: "",
     targetAudience: {},
     contentType: "",
     message: "",

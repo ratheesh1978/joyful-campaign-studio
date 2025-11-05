@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TemplateSelector } from "./TemplateSelector";
 import { TemplateBuilder } from "./TemplateBuilder";
+import { EmailPreview } from "./EmailPreview";
 
 interface ContentTabProps {
   data: any;
@@ -17,7 +19,8 @@ export function ContentTab({ data, onChange }: ContentTabProps) {
   const [compositionMode, setCompositionMode] = useState("compose");
 
   return (
-    <div className="space-y-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Left Side - Compose Area */}
       <Card className="p-6">
         <div className="space-y-6">
           <div>
@@ -62,16 +65,28 @@ export function ContentTab({ data, onChange }: ContentTabProps) {
             </div>
 
             {compositionMode === "compose" && (
-              <div>
-                <Label htmlFor="message-body">Message Body *</Label>
-                <Textarea
-                  id="message-body"
-                  placeholder="Write your email message here... Use placeholders like {{UserName}} for personalization."
-                  value={data.message || ""}
-                  onChange={(e) => onChange({ message: e.target.value })}
-                  className="mt-1.5 min-h-[400px] resize-y"
-                />
-              </div>
+              <>
+                <div>
+                  <Label htmlFor="email-subject">Subject *</Label>
+                  <Input
+                    id="email-subject"
+                    placeholder="Enter email subject"
+                    value={data.subject || ""}
+                    onChange={(e) => onChange({ subject: e.target.value })}
+                    className="mt-1.5"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="message-body">Message Body *</Label>
+                  <Textarea
+                    id="message-body"
+                    placeholder="Write your email message here... Use placeholders like {{UserName}} for personalization."
+                    value={data.message || ""}
+                    onChange={(e) => onChange({ message: e.target.value })}
+                    className="mt-1.5 min-h-[400px] resize-y"
+                  />
+                </div>
+              </>
             )}
 
             {compositionMode === "template" && (
@@ -96,6 +111,16 @@ export function ContentTab({ data, onChange }: ContentTabProps) {
           </div>
         </div>
       </Card>
+
+      {/* Right Side - Preview */}
+      <div className="lg:sticky lg:top-24 lg:h-fit">
+        <EmailPreview
+          subject={data.subject}
+          senderName={data.senderName}
+          senderEmail={data.senderEmail}
+          message={data.message}
+        />
+      </div>
     </div>
   );
 }
