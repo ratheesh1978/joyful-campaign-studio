@@ -6,7 +6,7 @@ import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetT
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Plus, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
+import { Plus, ChevronRight, ChevronLeft, Calendar as CalendarIcon } from "lucide-react";
 import { AutomationRule } from "@/types/automation";
 import { AutomationRuleComponent } from "./AutomationRule";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -33,13 +33,15 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
     }
   ]);
   const [exitConditionOpen, setExitConditionOpen] = useState(false);
-  const [detailViewOpen, setDetailViewOpen] = useState(false);
   const [detailViewType, setDetailViewType] = useState<string>("");
   const [endDate, setEndDate] = useState<Date>();
 
   const openDetailView = (type: string) => {
     setDetailViewType(type);
-    setDetailViewOpen(true);
+  };
+
+  const backToMainView = () => {
+    setDetailViewType("");
   };
 
   const getDetailViewTitle = () => {
@@ -221,15 +223,34 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
       </Card>
 
       {/* Exit Condition Sheet */}
-      <Sheet open={exitConditionOpen} onOpenChange={setExitConditionOpen}>
+      <Sheet open={exitConditionOpen} onOpenChange={(open) => {
+        setExitConditionOpen(open);
+        if (!open) setDetailViewType(""); // Reset detail view when closing
+      }}>
         <SheetContent side="right" className="w-full sm:max-w-md">
           <SheetHeader>
-            <SheetTitle>Choose exit condition</SheetTitle>
-            <SheetDescription className="sr-only">Select a condition that will stop the automation</SheetDescription>
+            <div className="flex items-center gap-2">
+              {detailViewType && (
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8"
+                  onClick={backToMainView}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+              )}
+              <SheetTitle>{detailViewType ? getDetailViewTitle() : "Choose exit condition"}</SheetTitle>
+            </div>
+            <SheetDescription className="sr-only">
+              {detailViewType ? "Select specific items for this exit condition" : "Select a condition that will stop the automation"}
+            </SheetDescription>
           </SheetHeader>
 
-          <div className="mt-6 space-y-6">
-            <RadioGroup className="space-y-3">
+          {!detailViewType ? (
+            // Main exit condition list
+            <div className="mt-6 space-y-6">
+              <RadioGroup className="space-y-3">
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="membership-purchase" id="membership-purchase" />
                 <Label htmlFor="membership-purchase" className="font-normal cursor-pointer">On membership purchase</Label>
@@ -353,48 +374,43 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
                 <Label htmlFor="unsubscribes" className="font-normal cursor-pointer">Unsubscribes from emails</Label>
               </div>
             </RadioGroup>
+
+            <SheetFooter className="mt-6">
+              <Button variant="outline" onClick={() => setExitConditionOpen(false)}>Cancel</Button>
+              <Button onClick={() => setExitConditionOpen(false)}>Apply</Button>
+            </SheetFooter>
           </div>
+          ) : (
+            // Detail view for selecting specific items
+            <div className="mt-6">
+              <Input 
+                placeholder="Search..." 
+                className="mb-4"
+              />
+              
+              <div className="space-y-3 max-h-[400px] overflow-y-auto">
+                {getDetailViewItems().map((item, index) => (
+                  <div key={index} className="flex items-center space-x-2 p-2 hover:bg-accent rounded-md">
+                    <Checkbox id={`item-${index}`} />
+                    <Label 
+                      htmlFor={`item-${index}`} 
+                      className="font-normal cursor-pointer flex-1"
+                    >
+                      {item}
+                    </Label>
+                  </div>
+                ))}
+              </div>
 
-          <SheetFooter className="mt-6">
-            <Button variant="outline" onClick={() => setExitConditionOpen(false)}>Cancel</Button>
-            <Button onClick={() => setExitConditionOpen(false)}>Apply</Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-
-      {/* Detail View Sheet */}
-      <Sheet open={detailViewOpen} onOpenChange={setDetailViewOpen}>
-        <SheetContent side="right" className="w-full sm:max-w-md">
-          <SheetHeader>
-            <SheetTitle>{getDetailViewTitle()}</SheetTitle>
-            <SheetDescription className="sr-only">Select specific items for this exit condition</SheetDescription>
-          </SheetHeader>
-
-          <div className="mt-6">
-            <Input 
-              placeholder="Search..." 
-              className="mb-4"
-            />
-            
-            <div className="space-y-3 max-h-[400px] overflow-y-auto">
-              {getDetailViewItems().map((item, index) => (
-                <div key={index} className="flex items-center space-x-2 p-2 hover:bg-accent rounded-md">
-                  <Checkbox id={`item-${index}`} />
-                  <Label 
-                    htmlFor={`item-${index}`} 
-                    className="font-normal cursor-pointer flex-1"
-                  >
-                    {item}
-                  </Label>
-                </div>
-              ))}
+              <SheetFooter className="mt-6">
+                <Button variant="outline" onClick={backToMainView}>Back</Button>
+                <Button onClick={() => {
+                  backToMainView();
+                  setExitConditionOpen(false);
+                }}>Apply Selection</Button>
+              </SheetFooter>
             </div>
-          </div>
-
-          <SheetFooter className="mt-6">
-            <Button variant="outline" onClick={() => setDetailViewOpen(false)}>Cancel</Button>
-            <Button onClick={() => setDetailViewOpen(false)}>Apply Selection</Button>
-          </SheetFooter>
+          )}
         </SheetContent>
       </Sheet>
     </div>
