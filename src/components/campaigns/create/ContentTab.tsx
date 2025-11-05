@@ -5,6 +5,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TemplateSelector } from "./TemplateSelector";
+import { TemplateBuilder } from "./TemplateBuilder";
 
 interface ContentTabProps {
   data: any;
@@ -59,16 +61,38 @@ export function ContentTab({ data, onChange }: ContentTabProps) {
               </Select>
             </div>
 
-            <div>
-              <Label htmlFor="message-body">Message Body *</Label>
-              <Textarea
-                id="message-body"
-                placeholder="Write your email message here... Use placeholders like {{UserName}} for personalization."
-                value={data.message || ""}
-                onChange={(e) => onChange({ message: e.target.value })}
-                className="mt-1.5 min-h-[400px] resize-y"
+            {compositionMode === "compose" && (
+              <div>
+                <Label htmlFor="message-body">Message Body *</Label>
+                <Textarea
+                  id="message-body"
+                  placeholder="Write your email message here... Use placeholders like {{UserName}} for personalization."
+                  value={data.message || ""}
+                  onChange={(e) => onChange({ message: e.target.value })}
+                  className="mt-1.5 min-h-[400px] resize-y"
+                />
+              </div>
+            )}
+
+            {compositionMode === "template" && (
+              <TemplateSelector
+                onSelect={(template) => {
+                  onChange({ selectedTemplate: template });
+                  setCompositionMode("compose");
+                }}
+                onClose={() => setCompositionMode("compose")}
               />
-            </div>
+            )}
+
+            {compositionMode === "create-template" && (
+              <TemplateBuilder
+                onSave={(template) => {
+                  onChange({ createdTemplate: template });
+                  setCompositionMode("compose");
+                }}
+                onClose={() => setCompositionMode("compose")}
+              />
+            )}
           </div>
         </div>
       </Card>
