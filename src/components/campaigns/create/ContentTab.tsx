@@ -116,7 +116,11 @@ export function ContentTab({ data, onChange, onNext }: ContentTabProps) {
             {compositionMode === "template" && (
               <TemplateSelector
                 onSelect={(template) => {
-                  onChange({ selectedTemplate: template });
+                  onChange({ 
+                    selectedTemplate: template,
+                    subject: template.subject,
+                    message: template.preview
+                  });
                   setCompositionMode("compose");
                 }}
                 onClose={() => setCompositionMode("compose")}
