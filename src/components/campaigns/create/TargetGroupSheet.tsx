@@ -54,6 +54,10 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
 
               <div className="mt-4">
                 <Label className="text-sm text-muted-foreground">Select Specific Institutes</Label>
+                <div className="flex items-center justify-between mt-2">
+                  <Button variant="link" size="sm" className="h-auto p-0 text-xs">Select All</Button>
+                  <Button variant="link" size="sm" className="h-auto p-0 text-xs">Unselect All</Button>
+                </div>
                 <div className="relative mt-2">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input placeholder="Search institutes..." className="pl-9" />
@@ -100,6 +104,10 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
 
               <div className="mt-4">
                 <Label className="text-sm text-muted-foreground">Select Specific Institutes</Label>
+                <div className="flex items-center justify-between mt-2">
+                  <Button variant="link" size="sm" className="h-auto p-0 text-xs">Select All</Button>
+                  <Button variant="link" size="sm" className="h-auto p-0 text-xs">Unselect All</Button>
+                </div>
                 <div className="relative mt-2">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input placeholder="Search institutes..." className="pl-9" />
