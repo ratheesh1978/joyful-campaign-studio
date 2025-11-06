@@ -100,12 +100,12 @@ export const CampaignCard = ({
         <Button 
           variant="outline" 
           className="flex-1"
-          onClick={() => navigate(`/campaign/${id}`)}
+          onClick={() => navigate(status === "DRAFT" ? "/create-campaign" : `/campaign/${id}`)}
         >
           View Details
         </Button>
         {status === "DRAFT" && (
-          <Button className="flex-1">Edit</Button>
+          <Button className="flex-1" onClick={() => navigate("/create-campaign")}>Edit</Button>
         )}
       </div>
     </Card>
