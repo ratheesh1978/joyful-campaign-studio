@@ -391,7 +391,7 @@ const CampaignDetails = () => {
                   <div className="grid grid-cols-3 gap-4 items-center">
                     <label className="text-sm font-medium">From name</label>
                     <div className="col-span-2">
-                      <p className="text-sm text-muted-foreground">Eleta Academy</p>
+                      <p className="text-sm text-muted-foreground">Wayvida</p>
                     </div>
                   </div>
 
@@ -399,17 +399,7 @@ const CampaignDetails = () => {
                   <div className="grid grid-cols-3 gap-4 items-center">
                     <label className="text-sm font-medium">From</label>
                     <div className="col-span-2">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm text-muted-foreground">eletaacademy</p>
-                        <Select defaultValue="@mg.sg.graphy.com" disabled>
-                          <SelectTrigger className="w-[180px] h-8">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="@mg.sg.graphy.com">@mg.sg.graphy.com</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                      <p className="text-sm text-muted-foreground">grow@wayvida.com</p>
                     </div>
                   </div>
 
@@ -417,7 +407,7 @@ const CampaignDetails = () => {
                   <div className="grid grid-cols-3 gap-4 items-center">
                     <label className="text-sm font-medium">Reply</label>
                     <div className="col-span-2">
-                      <p className="text-sm text-muted-foreground">aiswarya.tester1997@gmail.com</p>
+                      <p className="text-sm text-muted-foreground">grow@wayvida.com</p>
                     </div>
                   </div>
 
