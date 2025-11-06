@@ -49,11 +49,6 @@ export function BasicInfoTab({ data, onChange, onNext }: BasicInfoTabProps) {
     <div className="space-y-6">
       <Card className="p-6">
         <div className="space-y-6">
-          <div>
-            <h2 className="text-2xl font-semibold text-foreground">Email Campaign Details</h2>
-            <p className="text-sm text-muted-foreground mt-1">Set up the basic information for your email campaign</p>
-          </div>
-
           <div className="space-y-4">
             <div>
               <Label htmlFor="campaign-name">Campaign Name *</Label>
