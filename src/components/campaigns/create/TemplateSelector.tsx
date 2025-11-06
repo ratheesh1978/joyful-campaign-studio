@@ -26,33 +26,17 @@ export function TemplateSelector({ onSelect, onClose }: TemplateSelectorProps) {
   const templates: Template[] = [
     {
       id: "1",
-      name: "You don't just need ...",
-      subject: "Dear [Institute-Name],\n\nFirst — Congratulations on joining Wayvids...",
-      preview: "You've already done what most people only dream of — taking the first step toward building something of your own...",
+      name: "Institute Welcome Template",
+      subject: "Dear [Institute-Name], Congratulations on joining Wayvida!",
+      preview: "You've already done what most people only dream of — taking the first step toward building something of your own. Welcome to Wayvida, where we help you turn your vision into reality.",
       date: "Aug 26, 2025 11:19 AM",
       status: "Active"
     },
     {
       id: "2",
-      name: "Welcome to Wayvida",
-      subject: "Hi [Learner-Name]",
-      preview: "We're excited to share a special opportunity that could take your learning journey to the next level!",
-      date: "Aug 26, 2025 11:19 AM",
-      status: "Active"
-    },
-    {
-      id: "3",
-      name: "We're still here — r...",
-      subject: "First of all — Congratulations!",
-      preview: "Not everyone dares to take that first bold step toward their dream. But you did...",
-      date: "Aug 26, 2025 11:19 AM",
-      status: "Active"
-    },
-    {
-      id: "4",
-      name: "Welcome to Wayvida",
-      subject: "Hi [Learner-Name]",
-      preview: "We're excited to share a special opportunity that could take your learning journey to the next level!",
+      name: "Learner Welcome Template",
+      subject: "Hi [Learner-Name], Welcome to Wayvida!",
+      preview: "We're excited to share a special opportunity that could take your learning journey to the next level! Explore our courses and start your transformation today.",
       date: "Aug 26, 2025 11:19 AM",
       status: "Active"
     }
@@ -64,7 +48,7 @@ export function TemplateSelector({ onSelect, onClose }: TemplateSelectorProps) {
         <h3 className="text-lg font-semibold">Select Template</h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {templates.map((template) => (
           <Card
             key={template.id}
@@ -74,24 +58,26 @@ export function TemplateSelector({ onSelect, onClose }: TemplateSelectorProps) {
             )}
             onClick={() => setSelectedTemplate(template.id)}
           >
-            <div className="aspect-[3/4] bg-muted/30 border-b flex items-center justify-center p-4">
-              <div className="text-center space-y-2">
-                <div className="w-full h-32 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                  <div className="text-xs text-muted-foreground px-2">
-                    {template.preview.substring(0, 100)}...
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground line-clamp-3">
-                  {template.subject}
-                </p>
+            <div className="p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <h4 className="font-semibold text-lg">{template.name}</h4>
+                <span className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full">{template.status}</span>
               </div>
-            </div>
-            
-            <div className="p-3 space-y-2">
-              <h4 className="font-semibold text-sm truncate">{template.name}</h4>
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
+              
+              <div className="space-y-3">
+                <div>
+                  <span className="text-xs font-medium text-muted-foreground">Subject:</span>
+                  <p className="text-sm mt-1 line-clamp-2">{template.subject}</p>
+                </div>
+                
+                <div>
+                  <span className="text-xs font-medium text-muted-foreground">Preview:</span>
+                  <p className="text-sm text-muted-foreground mt-1 line-clamp-3">{template.preview}</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t">
                 <span>{template.date}</span>
-                <span className="text-green-600">{template.status}</span>
               </div>
               
               <div className="flex gap-2 pt-2">
