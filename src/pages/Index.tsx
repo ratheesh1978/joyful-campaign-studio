@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mail, MessageSquare, Plus, Users, Send, Eye, MousePointerClick, XCircle, UserX } from "lucide-react";
+import { Mail, MessageSquare, Plus, Send, Eye, MousePointerClick, XCircle, UserX } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { StatCard } from "@/components/campaigns/StatCard";
 import { CampaignCard } from "@/components/campaigns/CampaignCard";
@@ -13,7 +13,6 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState("email");
 
   const emailStats = {
-    totalRecipients: 750,
     sent: 750,
     opened: 500,
     clicked: 245,
@@ -22,7 +21,6 @@ const Index = () => {
   };
 
   const whatsappStats = {
-    totalRecipients: 1200,
     sent: 1200,
     opened: 980,
     clicked: 456,
@@ -114,13 +112,7 @@ const Index = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-          <StatCard
-            icon={Users}
-            label="Total Recipients"
-            value={stats.totalRecipients}
-            colorClass="bg-primary/10 text-primary"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
           <StatCard
             icon={Send}
             label="Sent"
