@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ArrowLeft, Mail, BarChart2, Sparkles, XCircle, UserMinus, FileDown, ArrowUpRight, Info, ChevronDown } from "lucide-react";
+import { ArrowLeft, Mail, BarChart2, Sparkles, XCircle, UserMinus, FileDown, ArrowUpRight, Info, ChevronDown, Smartphone, Send } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -382,23 +382,155 @@ const CampaignDetails = () => {
           </TabsContent>
 
           <TabsContent value="details" className="space-y-6 mt-6">
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Campaign Details</h2>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm text-muted-foreground">Campaign Name</p>
-                  <p className="text-base font-medium">{campaign.title}</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Left side - Email Details */}
+              <Card className="p-6">
+                <h2 className="text-xl font-semibold mb-6">Email Details</h2>
+                <div className="space-y-4">
+                  {/* From name */}
+                  <div className="grid grid-cols-3 gap-4 items-center">
+                    <label className="text-sm font-medium">From name</label>
+                    <div className="col-span-2">
+                      <p className="text-sm text-muted-foreground">Eleta Academy</p>
+                    </div>
+                  </div>
+
+                  {/* From */}
+                  <div className="grid grid-cols-3 gap-4 items-center">
+                    <label className="text-sm font-medium">From</label>
+                    <div className="col-span-2">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm text-muted-foreground">eletaacademy</p>
+                        <Select defaultValue="@mg.sg.graphy.com" disabled>
+                          <SelectTrigger className="w-[180px] h-8">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="@mg.sg.graphy.com">@mg.sg.graphy.com</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Reply */}
+                  <div className="grid grid-cols-3 gap-4 items-center">
+                    <label className="text-sm font-medium">Reply</label>
+                    <div className="col-span-2">
+                      <p className="text-sm text-muted-foreground">aiswarya.tester1997@gmail.com</p>
+                    </div>
+                  </div>
+
+                  {/* To */}
+                  <div className="grid grid-cols-3 gap-4 items-start">
+                    <label className="text-sm font-medium">To</label>
+                    <div className="col-span-2">
+                      <Badge variant="secondary" className="mb-2">
+                        Enrolled in courses: Any of the courses
+                      </Badge>
+                      <Button variant="link" className="p-0 h-auto text-sm text-primary">
+                        Show 8 recipients
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Use variables */}
+                  <div className="grid grid-cols-3 gap-4 items-center">
+                    <div className="col-span-3">
+                      <Button variant="ghost" className="p-0 h-auto text-sm text-muted-foreground hover:text-foreground">
+                        <ChevronDown className="h-4 w-4 mr-1" />
+                        Use variables to personalize your emails
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Subject */}
+                  <div className="grid grid-cols-3 gap-4 items-center pt-4 border-t">
+                    <label className="text-sm font-medium">Subject</label>
+                    <div className="col-span-2">
+                      <p className="text-sm">hello</p>
+                    </div>
+                  </div>
+
+                  {/* Email content */}
+                  <div className="pt-4 border-t">
+                    <div className="bg-muted/30 rounded-lg p-4 min-h-[200px]">
+                      <p className="text-sm text-primary">Welcome to our course</p>
+                    </div>
+                  </div>
+
+                  {/* Send immediately */}
+                  <div className="pt-4 border-t">
+                    <p className="text-sm text-muted-foreground">Send immediately</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Status</p>
-                  <Badge className="bg-success text-success-foreground">SENT</Badge>
+              </Card>
+
+              {/* Right side - Mobile Preview */}
+              <Card className="p-6 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20">
+                <div className="flex items-center gap-2 mb-4">
+                  <Smartphone className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="text-lg font-semibold">Mobile Preview</h3>
                 </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Created Date</p>
-                  <p className="text-base font-medium">Jan 14, 2025</p>
+                
+                <div className="flex justify-center items-start">
+                  <div className="relative w-[280px] h-[540px] bg-background rounded-[2.5rem] border-8 border-foreground/20 shadow-2xl overflow-hidden">
+                    {/* Phone screen */}
+                    <div className="absolute inset-0 bg-background">
+                      {/* Status bar */}
+                      <div className="flex justify-between items-center px-6 py-2 text-xs">
+                        <span>11:00</span>
+                        <div className="flex items-center gap-1">
+                          <BarChart2 className="h-3 w-3" />
+                          <Smartphone className="h-3 w-3" />
+                        </div>
+                      </div>
+                      
+                      {/* Email header */}
+                      <div className="px-4 py-3 border-b">
+                        <div className="flex items-center justify-between mb-2">
+                          <ArrowLeft className="h-5 w-5" />
+                          <div className="flex gap-2">
+                            <Mail className="h-5 w-5" />
+                            <Info className="h-5 w-5" />
+                          </div>
+                        </div>
+                        <h4 className="font-semibold text-sm">hello</h4>
+                        <div className="flex items-center gap-2 mt-2">
+                          <Avatar className="h-8 w-8">
+                            <AvatarFallback className="bg-primary text-primary-foreground text-xs">S</AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-medium">Sender</p>
+                            <p className="text-xs text-muted-foreground truncate">me</p>
+                          </div>
+                          <span className="text-xs text-muted-foreground whitespace-nowrap">3 days ago</span>
+                        </div>
+                      </div>
+                      
+                      {/* Email content */}
+                      <div className="p-4">
+                        <p className="text-sm">Welcome to our course</p>
+                      </div>
+
+                      {/* Bottom icons */}
+                      <div className="absolute bottom-0 left-0 right-0 flex justify-around items-center py-4 border-t bg-background">
+                        <Mail className="h-5 w-5" />
+                        <Smartphone className="h-5 w-5" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </Card>
+
+                {/* Send test button */}
+                <div className="flex justify-end mt-6">
+                  <Button className="gap-2">
+                    <Send className="h-4 w-4" />
+                    Send test
+                  </Button>
+                </div>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </main>
