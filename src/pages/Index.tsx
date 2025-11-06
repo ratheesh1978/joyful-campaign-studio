@@ -5,7 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Mail, MessageSquare, Plus, Send, Eye, MousePointerClick, XCircle, UserX, Calendar as CalendarIcon, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { StatCard } from "@/components/campaigns/StatCard";
-import { PerformanceChart } from "@/components/campaigns/PerformanceChart";
 import { CampaignPerformanceChart } from "@/components/campaigns/CampaignPerformanceChart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -43,11 +42,6 @@ const Index = () => {
 
   const stats = activeTab === "email" ? emailStats : whatsappStats;
 
-  const performanceData = [
-    { name: "Q1 2025 New Features...", opened: 180, clicked: 95 },
-    { name: "Marketplace User Onb...", opened: 320, clicked: 150 },
-    { name: "Product Update Newsl...", opened: 0, clicked: 0 },
-  ];
 
 
   const campaigns = [
@@ -208,9 +202,8 @@ const Index = () => {
           />
         </div>
 
-        {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <PerformanceChart data={performanceData} />
+        {/* Campaign Performance Chart */}
+        <div className="mb-8">
           <CampaignPerformanceChart stats={stats} />
         </div>
 
