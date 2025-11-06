@@ -6,7 +6,7 @@ import { Mail, MessageSquare, Plus, Send, Eye, MousePointerClick, XCircle, UserX
 import { useNavigate } from "react-router-dom";
 import { StatCard } from "@/components/campaigns/StatCard";
 import { PerformanceChart } from "@/components/campaigns/PerformanceChart";
-import { EngagementChart } from "@/components/campaigns/EngagementChart";
+import { CampaignPerformanceChart } from "@/components/campaigns/CampaignPerformanceChart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -49,12 +49,6 @@ const Index = () => {
     { name: "Product Update Newsl...", opened: 0, clicked: 0 },
   ];
 
-  const engagementData = [
-    { name: "Opened", value: 66.7, color: "hsl(var(--chart-1))" },
-    { name: "Clicked", value: 32.7, color: "hsl(var(--chart-3))" },
-    { name: "Unsubscribed", value: 1.1, color: "hsl(var(--chart-5))" },
-    { name: "Bounced", value: 2.0, color: "hsl(var(--chart-4))" },
-  ];
 
   const campaigns = [
     {
@@ -217,7 +211,7 @@ const Index = () => {
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <PerformanceChart data={performanceData} />
-          <EngagementChart data={engagementData} />
+          <CampaignPerformanceChart stats={stats} />
         </div>
 
         {/* Campaigns Table */}
