@@ -122,11 +122,11 @@ const Index = () => {
             <TabsList>
               <TabsTrigger value="email" className="gap-2">
                 <Mail className="h-4 w-4" />
-                Email Campaigns
+                Email
               </TabsTrigger>
               <TabsTrigger value="whatsapp" className="gap-2">
                 <MessageSquare className="h-4 w-4" />
-                WhatsApp Campaigns
+                WhatsApp
               </TabsTrigger>
             </TabsList>
           </Tabs>
