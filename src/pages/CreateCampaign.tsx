@@ -1,17 +1,26 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Calendar, Send, Save } from "lucide-react";
+import { ArrowLeft, Calendar as CalendarIcon, Send, Save } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BasicInfoTab } from "@/components/campaigns/create/BasicInfoTab";
 import { ContentTab } from "@/components/campaigns/create/ContentTab";
 import { AutomationTab } from "@/components/campaigns/create/AutomationTab";
 import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export default function CreateCampaign() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("basic-info");
+  const [isScheduleDialogOpen, setIsScheduleDialogOpen] = useState(false);
+  const [scheduledDate, setScheduledDate] = useState<Date>();
+  const [scheduledTime, setScheduledTime] = useState("09:00");
   const [campaignData, setCampaignData] = useState({
     type: "email",
     name: "",
@@ -21,7 +30,9 @@ export default function CreateCampaign() {
     targetAudience: {},
     contentType: "",
     message: "",
-    automationRules: []
+    automationRules: [],
+    scheduledDate: undefined as Date | undefined,
+    scheduledTime: ""
   });
 
   const handleSaveDraft = () => {
@@ -32,9 +43,29 @@ export default function CreateCampaign() {
   };
 
   const handleSchedule = () => {
+    setIsScheduleDialogOpen(true);
+  };
+
+  const handleConfirmSchedule = () => {
+    if (!scheduledDate) {
+      toast({
+        title: "Date Required",
+        description: "Please select a date for scheduling.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setCampaignData({
+      ...campaignData,
+      scheduledDate,
+      scheduledTime
+    });
+
+    setIsScheduleDialogOpen(false);
     toast({
-      title: "Schedule Campaign",
-      description: "Opening schedule options...",
+      title: "Campaign Scheduled",
+      description: `Campaign will be sent on ${format(scheduledDate, "PPP")} at ${scheduledTime}`,
     });
   };
 
@@ -68,7 +99,7 @@ export default function CreateCampaign() {
               Save Draft
             </Button>
             <Button variant="outline" onClick={handleSchedule}>
-              <Calendar className="mr-2 h-4 w-4" />
+              <CalendarIcon className="mr-2 h-4 w-4" />
               Schedule
             </Button>
             <Button onClick={handleSendNow}>
@@ -114,6 +145,55 @@ export default function CreateCampaign() {
           </Tabs>
         </div>
       </main>
+
+      {/* Schedule Dialog */}
+      <Dialog open={isScheduleDialogOpen} onOpenChange={setIsScheduleDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Schedule Campaign</DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-6 py-4">
+            <div className="space-y-2">
+              <Label>Select Date</Label>
+              <div className="flex justify-center border rounded-md p-4">
+                <Calendar
+                  mode="single"
+                  selected={scheduledDate}
+                  onSelect={setScheduledDate}
+                  disabled={(date) => date < new Date()}
+                  initialFocus
+                  className="pointer-events-auto"
+                />
+              </div>
+              {scheduledDate && (
+                <p className="text-sm text-muted-foreground">
+                  Selected: {format(scheduledDate, "PPP")}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="schedule-time">Select Time</Label>
+              <Input
+                id="schedule-time"
+                type="time"
+                value={scheduledTime}
+                onChange={(e) => setScheduledTime(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsScheduleDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleConfirmSchedule}>
+              Confirm Schedule
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
