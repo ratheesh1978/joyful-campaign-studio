@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -12,7 +13,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Clock, Calendar, Mail, Link as LinkIcon, MailOpen } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ScheduleAutomationSectionProps {
   data: any;
@@ -22,7 +30,7 @@ interface ScheduleAutomationSectionProps {
 
 export function ScheduleAutomationSection({ data, onChange, onBack }: ScheduleAutomationSectionProps) {
   const [scheduleType, setScheduleType] = useState<"immediate" | "scheduled">("immediate");
-  const [scheduledDate, setScheduledDate] = useState("");
+  const [scheduledDate, setScheduledDate] = useState<Date>();
   const [scheduledTime, setScheduledTime] = useState("");
   
   const [mailOpened, setMailOpened] = useState(false);
@@ -66,13 +74,31 @@ export function ScheduleAutomationSection({ data, onChange, onBack }: ScheduleAu
         {scheduleType === "scheduled" && (
           <div className="mt-6 space-y-4 pl-6 border-l-2 border-primary/20">
             <div className="space-y-2">
-              <Label htmlFor="schedule-date">Select Date</Label>
-              <Input
-                id="schedule-date"
-                type="date"
-                value={scheduledDate}
-                onChange={(e) => setScheduledDate(e.target.value)}
-              />
+              <Label>Select Date</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !scheduledDate && "text-muted-foreground"
+                    )}
+                  >
+                    <Calendar className="mr-2 h-4 w-4" />
+                    {scheduledDate ? format(scheduledDate, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <CalendarComponent
+                    mode="single"
+                    selected={scheduledDate}
+                    onSelect={setScheduledDate}
+                    disabled={(date) => date < new Date()}
+                    initialFocus
+                    className="pointer-events-auto"
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
             
             <div className="space-y-2">
@@ -82,6 +108,7 @@ export function ScheduleAutomationSection({ data, onChange, onBack }: ScheduleAu
                 type="time"
                 value={scheduledTime}
                 onChange={(e) => setScheduledTime(e.target.value)}
+                className="w-full"
               />
             </div>
           </div>
