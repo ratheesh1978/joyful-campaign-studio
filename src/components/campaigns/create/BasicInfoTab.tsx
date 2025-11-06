@@ -72,7 +72,7 @@ export function BasicInfoTab({ data, onChange, onNext }: BasicInfoTabProps) {
                 <Input
                   id="sender-name"
                   placeholder="e.g., Wayvida Team"
-                  value={data.senderName || ""}
+                  value={data.senderName || "Wayvida"}
                   onChange={(e) => onChange({ senderName: e.target.value })}
                   className="mt-1.5"
                 />
