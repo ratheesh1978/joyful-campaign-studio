@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
+import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mail, MessageSquare, Plus, Send, Eye, MousePointerClick, XCircle, UserX, Calendar, Search } from "lucide-react";
+import { Mail, MessageSquare, Plus, Send, Eye, MousePointerClick, XCircle, UserX, Calendar as CalendarIcon, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { StatCard } from "@/components/campaigns/StatCard";
 import { PerformanceChart } from "@/components/campaigns/PerformanceChart";
@@ -11,13 +12,18 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 const Index = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("email");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [dateFilter, setDateFilter] = useState<string>("all");
+  const [dateFilterType, setDateFilterType] = useState<string>("all");
+  const [selectedDate, setSelectedDate] = useState<Date>();
+  const [selectedDateEnd, setSelectedDateEnd] = useState<Date>();
 
   const emailStats = {
     sent: 750,
@@ -116,11 +122,33 @@ const Index = () => {
       
       const matchesStatus = statusFilter === "all" || campaign.status === statusFilter;
       
-      const matchesDate = dateFilter === "all" || campaign.date === dateFilter;
+      let matchesDate = true;
+      if (dateFilterType !== "all" && selectedDate) {
+        const campaignDate = new Date(campaign.date);
+        const compareDate = new Date(selectedDate);
+        
+        switch (dateFilterType) {
+          case "on":
+            matchesDate = campaignDate.toDateString() === compareDate.toDateString();
+            break;
+          case "before":
+            matchesDate = campaignDate < compareDate;
+            break;
+          case "after":
+            matchesDate = campaignDate > compareDate;
+            break;
+          case "between":
+            if (selectedDateEnd) {
+              const endDate = new Date(selectedDateEnd);
+              matchesDate = campaignDate >= compareDate && campaignDate <= endDate;
+            }
+            break;
+        }
+      }
       
       return matchesSearch && matchesStatus && matchesDate;
     });
-  }, [searchQuery, statusFilter, dateFilter]);
+  }, [searchQuery, statusFilter, dateFilterType, selectedDate, selectedDateEnd]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -214,16 +242,80 @@ const Index = () => {
                 <SelectItem value="draft">Draft</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={dateFilter} onValueChange={setDateFilter}>
-              <SelectTrigger className="w-full md:w-[180px]">
-                <SelectValue placeholder="Filter by date" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Dates</SelectItem>
-                <SelectItem value="11/4/2025">11/4/2025</SelectItem>
-                <SelectItem value="11/3/2025">11/3/2025</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex flex-col gap-2 w-full md:w-auto">
+              <Select value={dateFilterType} onValueChange={(value) => {
+                setDateFilterType(value);
+                if (value === "all") {
+                  setSelectedDate(undefined);
+                  setSelectedDateEnd(undefined);
+                }
+              }}>
+                <SelectTrigger className="w-full md:w-[180px]">
+                  <SelectValue placeholder="Created On" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Dates</SelectItem>
+                  <SelectItem value="on">On</SelectItem>
+                  <SelectItem value="before">Before</SelectItem>
+                  <SelectItem value="after">After</SelectItem>
+                  <SelectItem value="between">Between</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              {dateFilterType !== "all" && (
+                <div className="flex gap-2">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full md:w-[180px] justify-start text-left font-normal",
+                          !selectedDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={setSelectedDate}
+                        initialFocus
+                        className="pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  
+                  {dateFilterType === "between" && (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full md:w-[180px] justify-start text-left font-normal",
+                            !selectedDateEnd && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {selectedDateEnd ? format(selectedDateEnd, "PPP") : <span>End date</span>}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={selectedDateEnd}
+                          onSelect={setSelectedDateEnd}
+                          initialFocus
+                          className="pointer-events-auto"
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
           <Table>
             <TableHeader>
@@ -262,7 +354,7 @@ const Index = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2 text-muted-foreground">
-                      <Calendar className="h-4 w-4" />
+                      <CalendarIcon className="h-4 w-4" />
                       <span>{campaign.date}</span>
                     </div>
                   </TableCell>
