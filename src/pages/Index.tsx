@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mail, MessageSquare, Plus, Send, Eye, MousePointerClick, XCircle, UserX } from "lucide-react";
+import { Mail, MessageSquare, Plus, Send, Eye, MousePointerClick, XCircle, UserX, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { StatCard } from "@/components/campaigns/StatCard";
-import { CampaignCard } from "@/components/campaigns/CampaignCard";
 import { PerformanceChart } from "@/components/campaigns/PerformanceChart";
 import { EngagementChart } from "@/components/campaigns/EngagementChart";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -47,35 +49,58 @@ const Index = () => {
     {
       id: 1,
       title: "Q1 2025 New Features Launch",
-      date: "Jan 14, 2025",
-      status: "SENT" as const,
-      recipients: 250,
-      conversion: 38.0,
-      opened: 180,
-      clicked: 95,
-      openRate: 72.0,
+      subtitle: "",
+      date: "11/4/2025",
+      status: "sent" as const,
+      type: "Email",
     },
     {
       id: 2,
       title: "Marketplace User Onboarding",
-      date: "Jan 19, 2025",
-      status: "SENT" as const,
-      recipients: 500,
-      conversion: 30.0,
-      opened: 320,
-      clicked: 150,
-      openRate: 64.0,
+      subtitle: "",
+      date: "11/4/2025",
+      status: "sent" as const,
+      type: "Email",
     },
     {
       id: 3,
-      title: "Product Update Newsletter",
-      date: "Jan 27, 2025",
-      status: "DRAFT" as const,
-      recipients: 0,
-      conversion: 0,
-      opened: 0,
-      clicked: 0,
-      openRate: 0,
+      title: "Monthly Newsletter",
+      subtitle: "Your Monthly Update - January 2025",
+      date: "11/3/2025",
+      status: "sent" as const,
+      type: "Email",
+    },
+    {
+      id: 4,
+      title: "Welcome Email Series",
+      subtitle: "Welcome to Our Platform!",
+      date: "11/3/2025",
+      status: "sent" as const,
+      type: "Email",
+    },
+    {
+      id: 5,
+      title: "Customer Feedback Request",
+      subtitle: "We Value Your Feedback",
+      date: "11/3/2025",
+      status: "draft" as const,
+      type: "Email",
+    },
+    {
+      id: 6,
+      title: "Summer Sale Campaign",
+      subtitle: "Summer Sale - Up to 50% Off!",
+      date: "11/3/2025",
+      status: "draft" as const,
+      type: "Email",
+    },
+    {
+      id: 7,
+      title: "Product Launch Announcement",
+      subtitle: "Exciting New Product Launch",
+      date: "11/3/2025",
+      status: "sent" as const,
+      type: "Email",
     },
   ];
 
@@ -151,12 +176,63 @@ const Index = () => {
           <EngagementChart data={engagementData} />
         </div>
 
-        {/* Campaigns List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {campaigns.map((campaign, index) => (
-            <CampaignCard key={index} {...campaign} />
-          ))}
-        </div>
+        {/* Campaigns Table */}
+        <Card>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[35%]">CAMPAIGN</TableHead>
+                <TableHead className="w-[15%]">TYPE</TableHead>
+                <TableHead className="w-[15%]">STATUS</TableHead>
+                <TableHead className="w-[20%]">CREATED</TableHead>
+                <TableHead className="w-[15%] text-right">ACTIONS</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {campaigns.map((campaign) => (
+                <TableRow key={campaign.id}>
+                  <TableCell>
+                    <div>
+                      <div className="font-semibold text-foreground">{campaign.title}</div>
+                      {campaign.subtitle && (
+                        <div className="text-sm text-muted-foreground">{campaign.subtitle}</div>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2 text-info">
+                      <Mail className="h-4 w-4" />
+                      <span>{campaign.type}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge 
+                      variant={campaign.status === "sent" ? "default" : "secondary"}
+                      className={campaign.status === "sent" ? "bg-success text-success-foreground" : ""}
+                    >
+                      {campaign.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Calendar className="h-4 w-4" />
+                      <span>{campaign.date}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      variant="link"
+                      className="text-info hover:text-info/80 p-0"
+                      onClick={() => navigate(campaign.status === "draft" ? "/create-campaign" : `/campaign/${campaign.id}`)}
+                    >
+                      View Details
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
       </main>
     </div>
   );
