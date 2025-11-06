@@ -326,12 +326,7 @@ const Index = () => {
               {filteredCampaigns.map((campaign) => (
                 <TableRow key={campaign.id}>
                   <TableCell>
-                    <div>
-                      <div className="font-semibold text-foreground">{campaign.title}</div>
-                      {campaign.subtitle && (
-                        <div className="text-sm text-muted-foreground">{campaign.subtitle}</div>
-                      )}
-                    </div>
+                    <div className="font-semibold text-foreground">{campaign.title}</div>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2 text-info">
