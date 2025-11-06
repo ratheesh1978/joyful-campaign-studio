@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ArrowLeft, Users, Send, Eye, MousePointerClick, FileDown, ArrowUpRight, Info } from "lucide-react";
+import { ArrowLeft, Mail, BarChart2, Sparkles, XCircle, UserMinus, FileDown, ArrowUpRight, Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const CampaignDetails = () => {
@@ -20,11 +20,20 @@ const CampaignDetails = () => {
   // Mock campaign data - would come from API/state in real app
   const campaign = {
     title: "Q1 2025 New Features Launch",
-    totalRecipients: 8,
-    delivered: 8,
-    uniqueOpens: 5,
-    totalClicks: 0,
+    sent: 0,
+    opened: 0,
+    clicked: 0,
+    bounced: 0,
+    unsubscribed: 0,
   };
+
+  // Calculate percentages (avoiding division by zero)
+  const total = campaign.sent || 1;
+  const sentRate = 100;
+  const openRate = ((campaign.opened / total) * 100).toFixed(1);
+  const clickRate = ((campaign.clicked / total) * 100).toFixed(1);
+  const bounceRate = ((campaign.bounced / total) * 100).toFixed(1);
+  const unsubscribeRate = ((campaign.unsubscribed / total) * 100).toFixed(1);
 
   const learners = [
     {
@@ -101,95 +110,70 @@ const CampaignDetails = () => {
           </TabsList>
 
           <TabsContent value="analytics" className="space-y-6 mt-6">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Card className="p-6">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <p className="text-sm text-muted-foreground">Total recipients</p>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <Info className="h-4 w-4 text-muted-foreground" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Number of people who received this campaign</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                    <p className="text-3xl font-bold">{campaign.totalRecipients}</p>
+            {/* Campaign Metrics */}
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Campaign Metrics</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                {/* Sent */}
+                <Card className="p-6 bg-blue-50 dark:bg-blue-950/20 border-blue-100 dark:border-blue-900">
+                  <div className="flex items-start justify-between mb-4">
+                    <Mail className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                    <span className="text-sm font-medium text-blue-900 dark:text-blue-100">{sentRate}%</span>
                   </div>
-                  <Users className="h-8 w-8 text-muted-foreground" />
-                </div>
-              </Card>
+                  <div className="space-y-1">
+                    <p className="text-4xl font-bold text-blue-600 dark:text-blue-400">{campaign.sent}</p>
+                    <p className="text-sm text-blue-900/70 dark:text-blue-100/70">Sent</p>
+                  </div>
+                </Card>
 
-              <Card className="p-6">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <p className="text-sm text-muted-foreground">Delivered</p>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <Info className="h-4 w-4 text-muted-foreground" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Successfully delivered messages</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                    <p className="text-3xl font-bold">{campaign.delivered}</p>
+                {/* Opened */}
+                <Card className="p-6 bg-green-50 dark:bg-green-950/20 border-green-100 dark:border-green-900">
+                  <div className="flex items-start justify-between mb-4">
+                    <BarChart2 className="h-6 w-6 text-green-600 dark:text-green-400" />
+                    <span className="text-sm font-medium text-green-900 dark:text-green-100">{openRate}%</span>
                   </div>
-                  <Send className="h-8 w-8 text-muted-foreground" />
-                </div>
-              </Card>
+                  <div className="space-y-1">
+                    <p className="text-4xl font-bold text-green-600 dark:text-green-400">{campaign.opened}</p>
+                    <p className="text-sm text-green-900/70 dark:text-green-100/70">Opened</p>
+                  </div>
+                </Card>
 
-              <Card className="p-6">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <p className="text-sm text-muted-foreground">Unique opens</p>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <Info className="h-4 w-4 text-muted-foreground" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Number of unique recipients who opened</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                    <p className="text-3xl font-bold">{campaign.uniqueOpens}</p>
+                {/* Clicked */}
+                <Card className="p-6 bg-purple-50 dark:bg-purple-950/20 border-purple-100 dark:border-purple-900">
+                  <div className="flex items-start justify-between mb-4">
+                    <Sparkles className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                    <span className="text-sm font-medium text-purple-900 dark:text-purple-100">{clickRate}%</span>
                   </div>
-                  <Eye className="h-8 w-8 text-muted-foreground" />
-                </div>
-              </Card>
+                  <div className="space-y-1">
+                    <p className="text-4xl font-bold text-purple-600 dark:text-purple-400">{campaign.clicked}</p>
+                    <p className="text-sm text-purple-900/70 dark:text-purple-100/70">Clicked</p>
+                  </div>
+                </Card>
 
-              <Card className="p-6">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <p className="text-sm text-muted-foreground">Total clicks</p>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <Info className="h-4 w-4 text-muted-foreground" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Total number of link clicks</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                    <p className="text-3xl font-bold">{campaign.totalClicks}</p>
+                {/* Bounced */}
+                <Card className="p-6 bg-red-50 dark:bg-red-950/20 border-red-100 dark:border-red-900">
+                  <div className="flex items-start justify-between mb-4">
+                    <XCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
+                    <span className="text-sm font-medium text-red-900 dark:text-red-100">{bounceRate}%</span>
                   </div>
-                  <MousePointerClick className="h-8 w-8 text-muted-foreground" />
-                </div>
-              </Card>
+                  <div className="space-y-1">
+                    <p className="text-4xl font-bold text-red-600 dark:text-red-400">{campaign.bounced}</p>
+                    <p className="text-sm text-red-900/70 dark:text-red-100/70">Bounced</p>
+                  </div>
+                </Card>
+
+                {/* Unsubscribed */}
+                <Card className="p-6 bg-orange-50 dark:bg-orange-950/20 border-orange-100 dark:border-orange-900">
+                  <div className="flex items-start justify-between mb-4">
+                    <UserMinus className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+                    <span className="text-sm font-medium text-orange-900 dark:text-orange-100">{unsubscribeRate}%</span>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-4xl font-bold text-orange-600 dark:text-orange-400">{campaign.unsubscribed}</p>
+                    <p className="text-sm text-orange-900/70 dark:text-orange-100/70">Unsubscribed</p>
+                  </div>
+                </Card>
+              </div>
             </div>
 
             {/* Filters and Search */}
