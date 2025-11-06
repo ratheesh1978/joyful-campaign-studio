@@ -41,7 +41,7 @@ const CampaignDetails = () => {
       name: "Sreekanth S",
       email: "coursedirector@neyvar.in",
       deliveryTime: "04 Nov, 2025 07:27 PM",
-      tags: ["Delivered"],
+      tags: ["Delivered", "Opened", "Link Clicked"],
       avatar: "S",
       color: "bg-purple-500",
     },
@@ -50,36 +50,81 @@ const CampaignDetails = () => {
       name: "Ratheesh Babu",
       email: "ratheeshbabu42@gmail.com",
       deliveryTime: "04 Nov, 2025 07:27 PM",
-      tags: ["Delivered"],
+      tags: ["Delivered", "Opened"],
       avatar: "R",
-      color: "bg-purple-500",
+      color: "bg-blue-500",
     },
     {
       id: 3,
       name: "Sajid",
       email: "zajiddhan@gmail.com",
       deliveryTime: "04 Nov, 2025 07:27 PM",
-      tags: ["Delivered", "Email Opened"],
+      tags: ["Delivered"],
       avatar: "S",
-      color: "bg-purple-500",
+      color: "bg-green-500",
     },
     {
       id: 4,
       name: "Angel Malar",
       email: "angelmalar97@gmail.com",
       deliveryTime: "04 Nov, 2025 07:27 PM",
-      tags: ["Delivered", "Email Opened"],
+      tags: ["Bounced"],
       avatar: "A",
-      color: "bg-purple-500",
+      color: "bg-pink-500",
     },
     {
       id: 5,
       name: "Sreelekshmi",
       email: "lekshmiraji033@gmail.com",
       deliveryTime: "04 Nov, 2025 07:27 PM",
-      tags: ["Delivered", "Email Opened"],
+      tags: ["Delivered", "Opened", "Link Clicked"],
       avatar: "S",
-      color: "bg-purple-500",
+      color: "bg-orange-500",
+    },
+    {
+      id: 6,
+      name: "Priya Sharma",
+      email: "priya.sharma@example.com",
+      deliveryTime: "04 Nov, 2025 07:28 PM",
+      tags: ["Delivered", "Unsubscribed"],
+      avatar: "P",
+      color: "bg-indigo-500",
+    },
+    {
+      id: 7,
+      name: "Rahul Kumar",
+      email: "rahul.kumar@example.com",
+      deliveryTime: "04 Nov, 2025 07:28 PM",
+      tags: ["Failed"],
+      avatar: "R",
+      color: "bg-red-500",
+    },
+    {
+      id: 8,
+      name: "Meera Nair",
+      email: "meera.nair@example.com",
+      deliveryTime: "04 Nov, 2025 07:29 PM",
+      tags: ["Delivered", "Opened"],
+      avatar: "M",
+      color: "bg-teal-500",
+    },
+    {
+      id: 9,
+      name: "Arjun Reddy",
+      email: "arjun.reddy@example.com",
+      deliveryTime: "04 Nov, 2025 07:29 PM",
+      tags: ["Bounced"],
+      avatar: "A",
+      color: "bg-cyan-500",
+    },
+    {
+      id: 10,
+      name: "Divya Menon",
+      email: "divya.menon@example.com",
+      deliveryTime: "04 Nov, 2025 07:30 PM",
+      tags: ["Delivered", "Opened", "Link Clicked"],
+      avatar: "D",
+      color: "bg-violet-500",
     },
   ];
 
@@ -260,15 +305,26 @@ const CampaignDetails = () => {
                         <TableCell className="text-muted-foreground">{learner.deliveryTime}</TableCell>
                         <TableCell>
                           <div className="flex gap-2 flex-wrap">
-                            {learner.tags.map((tag, index) => (
-                              <Badge
-                                key={index}
-                                variant={tag === "Email Opened" ? "secondary" : "default"}
-                                className={tag === "Delivered" ? "bg-success/10 text-success hover:bg-success/20" : ""}
-                              >
-                                {tag}
-                              </Badge>
-                            ))}
+                            {learner.tags.map((tag, index) => {
+                              const tagStyles = {
+                                "Delivered": "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-300 hover:bg-green-200",
+                                "Bounced": "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 hover:bg-red-200",
+                                "Failed": "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 hover:bg-red-200",
+                                "Opened": "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 hover:bg-blue-200",
+                                "Link Clicked": "bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 hover:bg-purple-200",
+                                "Unsubscribed": "bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300 hover:bg-orange-200",
+                              };
+                              
+                              return (
+                                <Badge
+                                  key={index}
+                                  variant="secondary"
+                                  className={tagStyles[tag as keyof typeof tagStyles] || ""}
+                                >
+                                  {tag}
+                                </Badge>
+                              );
+                            })}
                           </div>
                         </TableCell>
                         <TableCell>
