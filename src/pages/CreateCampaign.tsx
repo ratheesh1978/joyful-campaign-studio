@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Mail, MessageSquare } from "lucide-react";
+import { Mail, MessageSquare, ArrowLeft, Calendar as CalendarIcon, Send, Save } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Calendar as CalendarIcon, Send, Save } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BasicInfoTab } from "@/components/campaigns/create/BasicInfoTab";
