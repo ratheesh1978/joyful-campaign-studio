@@ -116,21 +116,18 @@ const Index = () => {
               Create {activeTab === "email" ? "Email" : "WhatsApp"} Campaign
             </Button>
           </div>
-          <div className="flex items-center justify-between">
-            <p className="text-muted-foreground">Create, manage, and track your marketing campaigns</p>
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-auto">
-              <TabsList>
-                <TabsTrigger value="email" className="gap-2">
-                  <Mail className="h-4 w-4" />
-                  Email
-                </TabsTrigger>
-                <TabsTrigger value="whatsapp" className="gap-2">
-                  <MessageSquare className="h-4 w-4" />
-                  WhatsApp
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-auto">
+            <TabsList>
+              <TabsTrigger value="email" className="gap-2">
+                <Mail className="h-4 w-4" />
+                Email
+              </TabsTrigger>
+              <TabsTrigger value="whatsapp" className="gap-2">
+                <MessageSquare className="h-4 w-4" />
+                WhatsApp
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
       </header>
 
