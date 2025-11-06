@@ -118,11 +118,6 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
     <div className="space-y-6">
       <Card className="p-6">
         <div className="space-y-6">
-          <div>
-            <h2 className="text-2xl font-semibold text-foreground">Follow-Up Automation</h2>
-            <p className="text-sm text-muted-foreground mt-1">Set up automated follow-ups based on recipient behavior</p>
-          </div>
-
           {/* Exit Conditions */}
           <div className="border rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">

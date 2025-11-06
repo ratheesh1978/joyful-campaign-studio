@@ -47,11 +47,6 @@ export function ContentTab({ data, onChange, onNext }: ContentTabProps) {
       {/* Left Side - Compose Area */}
       <Card className="p-6">
         <div className="space-y-6">
-          <div>
-            <h2 className="text-2xl font-semibold text-foreground">Email Content</h2>
-            <p className="text-sm text-muted-foreground mt-1">Write your message and add attachments</p>
-          </div>
-
           <div className="space-y-4">
             <div>
               <Label htmlFor="composition-mode">Composition Mode</Label>
