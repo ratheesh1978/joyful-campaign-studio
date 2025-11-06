@@ -30,24 +30,6 @@ const CampaignDetails = () => {
     );
   };
 
-  // Mock campaign data - would come from API/state in real app
-  const campaign = {
-    title: "Q1 2025 New Features Launch",
-    sent: 0,
-    opened: 0,
-    clicked: 0,
-    bounced: 0,
-    unsubscribed: 0,
-  };
-
-  // Calculate percentages (avoiding division by zero)
-  const total = campaign.sent || 1;
-  const sentRate = 100;
-  const openRate = ((campaign.opened / total) * 100).toFixed(1);
-  const clickRate = ((campaign.clicked / total) * 100).toFixed(1);
-  const bounceRate = ((campaign.bounced / total) * 100).toFixed(1);
-  const unsubscribeRate = ((campaign.unsubscribed / total) * 100).toFixed(1);
-
   const learners = [
     {
       id: 1,
@@ -140,6 +122,25 @@ const CampaignDetails = () => {
       color: "bg-violet-500",
     },
   ];
+
+  // Calculate campaign metrics from learners data
+  const campaign = {
+    title: "Q1 2025 New Features Launch",
+    sent: learners.length,
+    opened: learners.filter(l => l.tags.includes("Opened")).length,
+    clicked: learners.filter(l => l.tags.includes("Link Clicked")).length,
+    bounced: learners.filter(l => l.tags.includes("Bounced")).length,
+    unsubscribed: learners.filter(l => l.tags.includes("Unsubscribed")).length,
+  };
+
+  // Calculate percentages (avoiding division by zero)
+  const total = campaign.sent || 1;
+  const sentRate = 100;
+  const openRate = ((campaign.opened / total) * 100).toFixed(1);
+  const clickRate = ((campaign.clicked / total) * 100).toFixed(1);
+  const bounceRate = ((campaign.bounced / total) * 100).toFixed(1);
+  const unsubscribeRate = ((campaign.unsubscribed / total) * 100).toFixed(1);
+
 
   const filteredLearners = learners.filter((learner) => {
     const matchesSearch = learner.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
