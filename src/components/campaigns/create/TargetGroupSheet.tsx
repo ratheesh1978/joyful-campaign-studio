@@ -111,11 +111,19 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
             <CollapsibleContent className="px-3 pt-3 space-y-3">
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
-                  <Checkbox id="marketplace-active" />
+                  <Checkbox 
+                    id="marketplace-active" 
+                    checked={marketplaceInstitutes.active}
+                    onCheckedChange={(checked) => setMarketplaceInstitutes(prev => ({ ...prev, active: !!checked }))}
+                  />
                   <Label htmlFor="marketplace-active" className="font-normal cursor-pointer">Active</Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Checkbox id="marketplace-inactive" />
+                  <Checkbox 
+                    id="marketplace-inactive" 
+                    checked={marketplaceInstitutes.inactive}
+                    onCheckedChange={(checked) => setMarketplaceInstitutes(prev => ({ ...prev, inactive: !!checked }))}
+                  />
                   <Label htmlFor="marketplace-inactive" className="font-normal cursor-pointer">Inactive</Label>
                 </div>
               </div>
@@ -183,15 +191,27 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
             <CollapsibleContent className="px-3 pt-3 space-y-3">
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
-                  <Checkbox id="wl-active" />
+                  <Checkbox 
+                    id="wl-active" 
+                    checked={whiteLabelInstitutes.active}
+                    onCheckedChange={(checked) => setWhiteLabelInstitutes(prev => ({ ...prev, active: !!checked }))}
+                  />
                   <Label htmlFor="wl-active" className="font-normal cursor-pointer">Active</Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Checkbox id="wl-inactive" />
+                  <Checkbox 
+                    id="wl-inactive" 
+                    checked={whiteLabelInstitutes.inactive}
+                    onCheckedChange={(checked) => setWhiteLabelInstitutes(prev => ({ ...prev, inactive: !!checked }))}
+                  />
                   <Label htmlFor="wl-inactive" className="font-normal cursor-pointer">Inactive</Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Checkbox id="wl-expired" />
+                  <Checkbox 
+                    id="wl-expired" 
+                    checked={whiteLabelInstitutes.expired}
+                    onCheckedChange={(checked) => setWhiteLabelInstitutes(prev => ({ ...prev, expired: !!checked }))}
+                  />
                   <Label htmlFor="wl-expired" className="font-normal cursor-pointer">Expired</Label>
                 </div>
               </div>
@@ -381,15 +401,27 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
             <CollapsibleContent className="px-3 pt-3 space-y-4">
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
-                  <Checkbox id="learners-active" />
+                  <Checkbox 
+                    id="learners-active" 
+                    checked={learners.active}
+                    onCheckedChange={(checked) => setLearners(prev => ({ ...prev, active: !!checked }))}
+                  />
                   <Label htmlFor="learners-active" className="font-normal cursor-pointer">Active</Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Checkbox id="learners-inactive" />
+                  <Checkbox 
+                    id="learners-inactive" 
+                    checked={learners.inactive}
+                    onCheckedChange={(checked) => setLearners(prev => ({ ...prev, inactive: !!checked }))}
+                  />
                   <Label htmlFor="learners-inactive" className="font-normal cursor-pointer">Inactive</Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Checkbox id="learners-expired" />
+                  <Checkbox 
+                    id="learners-expired" 
+                    checked={learners.expired}
+                    onCheckedChange={(checked) => setLearners(prev => ({ ...prev, expired: !!checked }))}
+                  />
                   <Label htmlFor="learners-expired" className="font-normal cursor-pointer">Expired</Label>
                 </div>
               </div>
