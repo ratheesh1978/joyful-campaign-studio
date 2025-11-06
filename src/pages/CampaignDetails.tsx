@@ -8,14 +8,27 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ArrowLeft, Mail, BarChart2, Sparkles, XCircle, UserMinus, FileDown, ArrowUpRight, Info } from "lucide-react";
+import { ArrowLeft, Mail, BarChart2, Sparkles, XCircle, UserMinus, FileDown, ArrowUpRight, Info, ChevronDown } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const CampaignDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState("email");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  const availableTags = ["Delivered", "Bounced", "Failed", "Opened", "Link Clicked", "Unsubscribed"];
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev => 
+      prev.includes(tag) 
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    );
+  };
 
   // Mock campaign data - would come from API/state in real app
   const campaign = {
@@ -128,10 +141,15 @@ const CampaignDetails = () => {
     },
   ];
 
-  const filteredLearners = learners.filter((learner) =>
-    learner.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    learner.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredLearners = learners.filter((learner) => {
+    const matchesSearch = learner.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      learner.name.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesTags = selectedTags.length === 0 || 
+      selectedTags.some(tag => learner.tags.includes(tag));
+    
+    return matchesSearch && matchesTags;
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -249,15 +267,38 @@ const CampaignDetails = () => {
 
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-sm text-muted-foreground">Filter by:</span>
-                <Select defaultValue="tags">
-                  <SelectTrigger className="w-[120px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="tags">Tags</SelectItem>
-                    <SelectItem value="status">Status</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="gap-2 bg-background">
+                      Tags
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-56 bg-background z-50" align="start">
+                    <div className="space-y-3">
+                      {availableTags.map((tag) => (
+                        <div key={tag} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={tag}
+                            checked={selectedTags.includes(tag)}
+                            onCheckedChange={() => toggleTag(tag)}
+                          />
+                          <label
+                            htmlFor={tag}
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                          >
+                            {tag}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+                {selectedTags.length > 0 && (
+                  <Badge variant="secondary" className="ml-2">
+                    {selectedTags.length} selected
+                  </Badge>
+                )}
               </div>
 
               <p className="text-sm text-muted-foreground mb-4">{filteredLearners.length} learner(s)</p>
