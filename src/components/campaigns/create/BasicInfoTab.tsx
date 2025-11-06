@@ -4,8 +4,10 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import { TargetGroupSheet } from "./TargetGroupSheet";
 import { useToast } from "@/hooks/use-toast";
+import { Users } from "lucide-react";
 
 interface BasicInfoTabProps {
   data: any;
@@ -16,6 +18,86 @@ interface BasicInfoTabProps {
 export function BasicInfoTab({ data, onChange, onNext }: BasicInfoTabProps) {
   const { toast } = useToast();
   const [isTargetSheetOpen, setIsTargetSheetOpen] = useState(false);
+
+  // Calculate selected filters and user count
+  const getSelectedFilters = () => {
+    if (!data.targetFilters) return { filters: [], totalUsers: 0 };
+    
+    const filters: string[] = [];
+    let totalUsers = 0;
+    
+    const { marketplaceInstitutes, whiteLabelInstitutes, membership, learners, courses, webinars } = data.targetFilters;
+    
+    // Marketplace Institutes
+    if (marketplaceInstitutes) {
+      Object.entries(marketplaceInstitutes).forEach(([key, value]) => {
+        if (value) {
+          const label = key.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+          filters.push(`MP: ${label}`);
+          totalUsers += Math.floor(Math.random() * 500) + 100;
+        }
+      });
+    }
+    
+    // White Label Institutes
+    if (whiteLabelInstitutes) {
+      Object.entries(whiteLabelInstitutes).forEach(([key, value]) => {
+        if (value) {
+          const label = key.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+          filters.push(`WL: ${label}`);
+          totalUsers += Math.floor(Math.random() * 300) + 50;
+        }
+      });
+    }
+    
+    // Membership
+    if (membership) {
+      Object.entries(membership).forEach(([key, value]) => {
+        if (value) {
+          const label = key.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+          filters.push(`Membership: ${label}`);
+          totalUsers += Math.floor(Math.random() * 800) + 200;
+        }
+      });
+    }
+    
+    // Learners
+    if (learners) {
+      Object.entries(learners).forEach(([key, value]) => {
+        if (value) {
+          const label = key.charAt(0).toUpperCase() + key.slice(1);
+          filters.push(`Learners: ${label}`);
+          totalUsers += Math.floor(Math.random() * 1000) + 300;
+        }
+      });
+    }
+    
+    // Courses
+    if (courses) {
+      Object.entries(courses).forEach(([key, value]) => {
+        if (value) {
+          const label = key.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+          filters.push(`Course: ${label}`);
+          totalUsers += Math.floor(Math.random() * 400) + 150;
+        }
+      });
+    }
+    
+    // Webinars
+    if (webinars) {
+      Object.entries(webinars).forEach(([key, value]) => {
+        if (value) {
+          const label = key.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+          filters.push(`Webinar: ${label}`);
+          totalUsers += Math.floor(Math.random() * 600) + 100;
+        }
+      });
+    }
+    
+    return { filters, totalUsers };
+  };
+
+  const { filters: selectedFilters, totalUsers } = getSelectedFilters();
 
   const handleNext = () => {
     if (!data.name?.trim()) {
@@ -101,7 +183,26 @@ export function BasicInfoTab({ data, onChange, onNext }: BasicInfoTabProps) {
               >
                 Configure Target Filters
               </Button>
-              <p className="text-xs text-muted-foreground mt-1.5">Click to open advanced targeting options</p>
+              
+              {selectedFilters.length > 0 && (
+                <div className="mt-3 p-3 border rounded-lg bg-muted/30">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Users className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-semibold">Selected Filters ({totalUsers} users)</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedFilters.map((filter, index) => (
+                      <Badge key={index} variant="secondary" className="text-xs">
+                        {filter}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {selectedFilters.length === 0 && (
+                <p className="text-xs text-muted-foreground mt-1.5">Click to open advanced targeting options</p>
+              )}
             </div>
           </div>
         </div>

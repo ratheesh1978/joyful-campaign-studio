@@ -79,6 +79,17 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
   });
 
   const handleApply = () => {
+    // Save all selected filters to data
+    onChange({
+      targetFilters: {
+        marketplaceInstitutes,
+        whiteLabelInstitutes,
+        membership,
+        learners,
+        courses,
+        webinars,
+      }
+    });
     onOpenChange(false);
   };
 
