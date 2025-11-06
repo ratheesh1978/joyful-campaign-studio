@@ -139,57 +139,15 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
 
           {/* Exit Conditions */}
           <div className="border rounded-lg p-4">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-semibold text-foreground">Exit Conditions</h3>
-                  <p className="text-sm text-muted-foreground">Stop automation when specific actions occur</p>
-                </div>
-                <Button variant="outline" size="sm" onClick={() => setExitConditionOpen(true)}>
-                  <Plus className="h-4 w-4 mr-1" />
-                  Add Exit Condition
-                </Button>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-semibold text-foreground">Exit Conditions</h3>
+                <p className="text-sm text-muted-foreground">Stop automation when specific actions occur</p>
               </div>
-
-              {/* End Date inside Exit Conditions */}
-              <div className="pt-4 border-t">
-                <div className="space-y-3">
-                  <div>
-                    <h4 className="text-sm font-medium text-foreground">Automation End Date</h4>
-                    <p className="text-xs text-muted-foreground">Set when this automation should stop running</p>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-[240px] justify-start text-left font-normal",
-                            !endDate && "text-muted-foreground"
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {endDate ? format(endDate, "PPP") : "Pick a date"}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={endDate}
-                          onSelect={setEndDate}
-                          disabled={(date) => date < new Date()}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    {endDate && (
-                      <Button variant="ghost" size="sm" onClick={() => setEndDate(undefined)}>
-                        Clear
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </div>
+              <Button variant="outline" size="sm" onClick={() => setExitConditionOpen(true)}>
+                <Plus className="h-4 w-4 mr-1" />
+                Add Exit Condition
+              </Button>
             </div>
           </div>
         </div>
@@ -207,6 +165,45 @@ export function AutomationTab({ data, onChange }: AutomationTabProps) {
           </SheetHeader>
 
           <div className="mt-6 space-y-6">
+            {/* Automation End Date */}
+            <div className="border rounded-lg p-4">
+              <div className="space-y-3">
+                <div>
+                  <h4 className="text-sm font-semibold text-foreground">Automation End Date</h4>
+                  <p className="text-xs text-muted-foreground">Set when this automation should stop running</p>
+                </div>
+                <div className="flex items-center gap-4">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-[240px] justify-start text-left font-normal",
+                          !endDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {endDate ? format(endDate, "PPP") : "Pick a date"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={endDate}
+                        onSelect={setEndDate}
+                        disabled={(date) => date < new Date()}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  {endDate && (
+                    <Button variant="ghost" size="sm" onClick={() => setEndDate(undefined)}>
+                      Clear
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
             <RadioGroup className="space-y-4">
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
