@@ -39,10 +39,10 @@ const Index = () => {
   ];
 
   const engagementData = [
-    { name: "Opened", value: 65, color: "hsl(var(--chart-1))" },
-    { name: "Clicked", value: 32, color: "hsl(var(--chart-3))" },
-    { name: "Bounced", value: 2, color: "hsl(var(--chart-4))" },
-    { name: "Unsubscribed", value: 1, color: "hsl(var(--chart-5))" },
+    { name: "Opened", value: 66.7, color: "hsl(var(--chart-1))" },
+    { name: "Clicked", value: 32.7, color: "hsl(var(--chart-3))" },
+    { name: "Unsubscribed", value: 1.1, color: "hsl(var(--chart-5))" },
+    { name: "Bounced", value: 2.0, color: "hsl(var(--chart-4))" },
   ];
 
   const campaigns = [
