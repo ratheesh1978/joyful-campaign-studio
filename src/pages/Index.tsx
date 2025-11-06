@@ -108,33 +108,34 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card">
-        <div className="container mx-auto px-6 py-8">
-          <h1 className="text-4xl font-bold text-primary mb-2">Campaign Manager</h1>
-          <p className="text-muted-foreground">Create, manage, and track your marketing campaigns</p>
+        <div className="container mx-auto px-6 py-6">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-4xl font-bold text-primary">Campaign Manager</h1>
+            <Button className="gap-2" onClick={() => navigate("/create-campaign")}>
+              <Plus className="h-4 w-4" />
+              Create {activeTab === "email" ? "Email" : "WhatsApp"} Campaign
+            </Button>
+          </div>
+          <div className="flex items-center justify-between">
+            <p className="text-muted-foreground">Create, manage, and track your marketing campaigns</p>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-auto">
+              <TabsList>
+                <TabsTrigger value="email" className="gap-2">
+                  <Mail className="h-4 w-4" />
+                  Email
+                </TabsTrigger>
+                <TabsTrigger value="whatsapp" className="gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  WhatsApp
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="container mx-auto px-6 py-8">
-        {/* Tabs and Create Button */}
-        <div className="flex items-center justify-between mb-8">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-auto">
-            <TabsList>
-              <TabsTrigger value="email" className="gap-2">
-                <Mail className="h-4 w-4" />
-                Email
-              </TabsTrigger>
-              <TabsTrigger value="whatsapp" className="gap-2">
-                <MessageSquare className="h-4 w-4" />
-                WhatsApp
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-          <Button className="gap-2" onClick={() => navigate("/create-campaign")}>
-            <Plus className="h-4 w-4" />
-            Create {activeTab === "email" ? "Email" : "WhatsApp"} Campaign
-          </Button>
-        </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
