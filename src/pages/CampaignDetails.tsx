@@ -326,7 +326,6 @@ const CampaignDetails = () => {
                         </div>
                       </TableHead>
                       <TableHead>TAGS</TableHead>
-                      <TableHead className="w-[50px]"></TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -367,11 +366,6 @@ const CampaignDetails = () => {
                               );
                             })}
                           </div>
-                        </TableCell>
-                        <TableCell>
-                          <Button variant="ghost" size="icon">
-                            <ArrowUpRight className="h-4 w-4" />
-                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
