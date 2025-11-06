@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Mail, MessageSquare } from "lucide-react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar as CalendarIcon, Send, Save } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +28,7 @@ export default function CreateCampaign() {
     name: "",
     senderName: "",
     senderEmail: "",
+    whatsappNumber: "",
     subject: "",
     targetAudience: {},
     contentType: "",
@@ -90,8 +93,31 @@ export default function CreateCampaign() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-xl font-semibold text-foreground">Create New Campaign</h1>
-            <p className="text-sm text-muted-foreground">Design and launch your marketing campaign</p>
+            <div className="flex items-center gap-4">
+              <div>
+                <h1 className="text-xl font-semibold text-foreground">Create New Campaign</h1>
+                <p className="text-sm text-muted-foreground">Design and launch your marketing campaign</p>
+              </div>
+              <ToggleGroup
+                type="single"
+                value={campaignData.type}
+                onValueChange={(value) => {
+                  if (value) {
+                    setCampaignData({ ...campaignData, type: value });
+                  }
+                }}
+                className="border rounded-lg p-1"
+              >
+                <ToggleGroupItem value="email" className="gap-2">
+                  <Mail className="h-4 w-4" />
+                  Email
+                </ToggleGroupItem>
+                <ToggleGroupItem value="whatsapp" className="gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  WhatsApp
+                </ToggleGroupItem>
+              </ToggleGroup>
+            </div>
           </div>
           <div className="flex gap-3">
             <Button variant="outline" onClick={handleSaveDraft}>

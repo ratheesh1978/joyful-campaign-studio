@@ -99,6 +99,8 @@ export function BasicInfoTab({ data, onChange, onNext }: BasicInfoTabProps) {
 
   const { filters: selectedFilters, totalUsers } = getSelectedFilters();
 
+  const isWhatsApp = data.type === "whatsapp";
+
   const handleNext = () => {
     if (!data.name?.trim()) {
       toast({
@@ -116,14 +118,27 @@ export function BasicInfoTab({ data, onChange, onNext }: BasicInfoTabProps) {
       });
       return;
     }
-    if (!data.senderEmail?.trim()) {
-      toast({
-        title: "Missing Information",
-        description: "Please select a sender email.",
-        variant: "destructive",
-      });
-      return;
+    
+    if (isWhatsApp) {
+      if (!data.whatsappNumber?.trim()) {
+        toast({
+          title: "Missing Information",
+          description: "Please select a WhatsApp number.",
+          variant: "destructive",
+        });
+        return;
+      }
+    } else {
+      if (!data.senderEmail?.trim()) {
+        toast({
+          title: "Missing Information",
+          description: "Please select a sender email.",
+          variant: "destructive",
+        });
+        return;
+      }
     }
+    
     onNext();
   };
 
@@ -155,23 +170,45 @@ export function BasicInfoTab({ data, onChange, onNext }: BasicInfoTabProps) {
                 />
               </div>
 
-              <div>
-                <Label htmlFor="sender-email">Sender Email *</Label>
-                <Select
-                  value={data.senderEmail || ""}
-                  onValueChange={(value) => onChange({ senderEmail: value })}
-                >
-                  <SelectTrigger id="sender-email" className="mt-1.5">
-                    <SelectValue placeholder="Select sender email" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-popover z-[100]">
-                    <SelectItem value="notifications@wayvida.com">notifications@wayvida.com</SelectItem>
-                    <SelectItem value="grow@wayvida.com">grow@wayvida.com</SelectItem>
-                    <SelectItem value="info@wayvida.com">info@wayvida.com</SelectItem>
-                    <SelectItem value="add-new" className="text-primary">+ Add New Email</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              {isWhatsApp ? (
+                <div>
+                  <Label htmlFor="whatsapp-number">WhatsApp Number *</Label>
+                  <Select
+                    value={data.whatsappNumber || ""}
+                    onValueChange={(value) => onChange({ whatsappNumber: value })}
+                  >
+                    <SelectTrigger id="whatsapp-number" className="mt-1.5">
+                      <SelectValue placeholder="Select WhatsApp number" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-popover z-[100]">
+                      <SelectItem value="+1-555-0101">+1 (555) 010-1001</SelectItem>
+                      <SelectItem value="+1-555-0102">+1 (555) 010-1002</SelectItem>
+                      <SelectItem value="+1-555-0103">+1 (555) 010-1003</SelectItem>
+                      <SelectItem value="+91-98765-43210">+91 98765 43210</SelectItem>
+                      <SelectItem value="+44-7700-900123">+44 7700 900123</SelectItem>
+                      <SelectItem value="add-new" className="text-primary">+ Add New Number</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              ) : (
+                <div>
+                  <Label htmlFor="sender-email">Sender Email *</Label>
+                  <Select
+                    value={data.senderEmail || ""}
+                    onValueChange={(value) => onChange({ senderEmail: value })}
+                  >
+                    <SelectTrigger id="sender-email" className="mt-1.5">
+                      <SelectValue placeholder="Select sender email" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-popover z-[100]">
+                      <SelectItem value="notifications@wayvida.com">notifications@wayvida.com</SelectItem>
+                      <SelectItem value="grow@wayvida.com">grow@wayvida.com</SelectItem>
+                      <SelectItem value="info@wayvida.com">info@wayvida.com</SelectItem>
+                      <SelectItem value="add-new" className="text-primary">+ Add New Email</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
             </div>
 
             <div>
