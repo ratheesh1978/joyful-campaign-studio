@@ -24,7 +24,7 @@ export function CampaignPerformanceChart({ stats }: CampaignPerformanceChartProp
 
   return (
     <Card className="p-6">
-      <h3 className="text-lg font-semibold mb-6">Campaign Performance</h3>
+      <h3 className="text-lg font-semibold mb-6">Overall Performance Metrics</h3>
       <div className="space-y-6">
         {metrics.map((metric) => (
           <div key={metric.label} className="space-y-2">

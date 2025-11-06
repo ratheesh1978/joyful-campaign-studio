@@ -12,7 +12,7 @@ interface PerformanceChartProps {
 export const PerformanceChart = ({ data }: PerformanceChartProps) => {
   return (
     <Card className="p-6">
-      <h3 className="text-xl font-semibold mb-6">Campaign Performance</h3>
+      <h3 className="text-xl font-semibold mb-6">Campaign Comparison</h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
