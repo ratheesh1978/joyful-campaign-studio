@@ -52,6 +52,7 @@ const Index = () => {
       date: "11/4/2025",
       status: "sent" as const,
       type: "Email",
+      metrics: { sent: 150, delivered: 145, opened: 100, clicked: 45, bounced: 5, unsubscribed: 2 }
     },
     {
       id: 2,
@@ -60,6 +61,7 @@ const Index = () => {
       date: "11/4/2025",
       status: "sent" as const,
       type: "Email",
+      metrics: { sent: 200, delivered: 198, opened: 120, clicked: 60, bounced: 2, unsubscribed: 1 }
     },
     {
       id: 3,
@@ -68,6 +70,7 @@ const Index = () => {
       date: "11/3/2025",
       status: "sent" as const,
       type: "Email",
+      metrics: { sent: 100, delivered: 97, opened: 80, clicked: 35, bounced: 3, unsubscribed: 1 }
     },
     {
       id: 4,
@@ -76,6 +79,7 @@ const Index = () => {
       date: "11/3/2025",
       status: "sent" as const,
       type: "Email",
+      metrics: { sent: 180, delivered: 178, opened: 130, clicked: 70, bounced: 2, unsubscribed: 3 }
     },
     {
       id: 5,
@@ -84,6 +88,7 @@ const Index = () => {
       date: "11/3/2025",
       status: "draft" as const,
       type: "Email",
+      metrics: { sent: 0, delivered: 0, opened: 0, clicked: 0, bounced: 0, unsubscribed: 0 }
     },
     {
       id: 6,
@@ -92,6 +97,7 @@ const Index = () => {
       date: "11/3/2025",
       status: "draft" as const,
       type: "Email",
+      metrics: { sent: 0, delivered: 0, opened: 0, clicked: 0, bounced: 0, unsubscribed: 0 }
     },
     {
       id: 7,
@@ -100,6 +106,7 @@ const Index = () => {
       date: "11/3/2025",
       status: "sent" as const,
       type: "Email",
+      metrics: { sent: 120, delivered: 117, opened: 70, clicked: 35, bounced: 3, unsubscribed: 1 }
     },
   ];
 
@@ -134,9 +141,11 @@ const Index = () => {
         }
       }
       
-      return matchesSearch && matchesStatus && matchesDate;
+      const matchesMetric = !metricFilter || (campaign.metrics[metricFilter as keyof typeof campaign.metrics] > 0);
+      
+      return matchesSearch && matchesStatus && matchesDate && matchesMetric;
     });
-  }, [searchQuery, statusFilter, dateFilterType, selectedDate, selectedDateEnd]);
+  }, [searchQuery, statusFilter, dateFilterType, selectedDate, selectedDateEnd, metricFilter]);
 
   return (
     <div className="min-h-screen bg-background">
