@@ -44,10 +44,10 @@ export function SpamWarningDialog({ open, onOpenChange, reason }: SpamWarningDia
             <p>
               If you believe we&apos;ve made a mistake, please contact us at{" "}
               <a 
-                href="mailto:care@graphy.com" 
+                href="mailto:support@wayvida.com" 
                 className="text-primary hover:underline font-medium"
               >
-                care@graphy.com
+                support@wayvida.com
               </a>{" "}
               with the content and campaign name.
             </p>
