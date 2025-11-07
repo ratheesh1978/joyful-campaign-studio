@@ -14,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { SpamWarningDialog } from "@/components/campaigns/SpamWarningDialog";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function CreateCampaign() {
   const navigate = useNavigate();
@@ -22,6 +24,9 @@ export default function CreateCampaign() {
   const [isScheduleDialogOpen, setIsScheduleDialogOpen] = useState(false);
   const [scheduledDate, setScheduledDate] = useState<Date>();
   const [scheduledTime, setScheduledTime] = useState("09:00");
+  const [isSpamWarningOpen, setIsSpamWarningOpen] = useState(false);
+  const [spamReason, setSpamReason] = useState<string>("");
+  const [isCheckingSpam, setIsCheckingSpam] = useState(false);
   const [campaignData, setCampaignData] = useState({
     type: "email",
     name: "",
@@ -71,12 +76,60 @@ export default function CreateCampaign() {
     });
   };
 
-  const handleSendNow = () => {
-    toast({
-      title: "Campaign Sent",
-      description: "Your campaign is being sent to the target audience.",
-    });
-    navigate("/");
+  const handleSendNow = async () => {
+    // Validate required fields
+    if (!campaignData.subject || !campaignData.message) {
+      toast({
+        title: "Missing Content",
+        description: "Please fill in both subject and message before sending.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsCheckingSpam(true);
+    
+    try {
+      // Check for spam content
+      const { data, error } = await supabase.functions.invoke('check-spam-content', {
+        body: {
+          subject: campaignData.subject,
+          content: campaignData.message
+        }
+      });
+
+      if (error) {
+        console.error('Error checking spam:', error);
+        toast({
+          title: "Error",
+          description: "Failed to validate content. Please try again.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      if (data?.isSpam) {
+        setSpamReason(data.reason || "Content appears to contain spam-like patterns.");
+        setIsSpamWarningOpen(true);
+        return;
+      }
+
+      // If not spam, proceed with sending
+      toast({
+        title: "Campaign Sent",
+        description: "Your campaign is being sent to the target audience.",
+      });
+      navigate("/");
+    } catch (error) {
+      console.error('Error sending campaign:', error);
+      toast({
+        title: "Error",
+        description: "Failed to send campaign. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsCheckingSpam(false);
+    }
   };
 
   return (
@@ -127,9 +180,9 @@ export default function CreateCampaign() {
               <CalendarIcon className="mr-2 h-4 w-4" />
               Schedule
             </Button>
-            <Button onClick={handleSendNow}>
+            <Button onClick={handleSendNow} disabled={isCheckingSpam}>
               <Send className="mr-2 h-4 w-4" />
-              Send Now
+              {isCheckingSpam ? "Checking..." : "Send Now"}
             </Button>
           </div>
         </div>
@@ -170,6 +223,13 @@ export default function CreateCampaign() {
           </Tabs>
         </div>
       </main>
+
+      {/* Spam Warning Dialog */}
+      <SpamWarningDialog 
+        open={isSpamWarningOpen} 
+        onOpenChange={setIsSpamWarningOpen}
+        reason={spamReason}
+      />
 
       {/* Schedule Dialog */}
       <Dialog open={isScheduleDialogOpen} onOpenChange={setIsScheduleDialogOpen}>
