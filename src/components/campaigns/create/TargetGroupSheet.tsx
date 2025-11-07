@@ -54,29 +54,9 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
   });
 
   // Learners state
-  const [learners, setLearners] = useState({
-    active: false,
-    inactive: false,
-    expired: false,
-  });
-
-  // Courses state
-  const [courses, setCourses] = useState({
-    'intro-marketing': false,
-    'data-analytics': false,
-    'project-mgmt': false,
-    'digital-marketing': false,
-    'leadership': false,
-  });
-
-  // Webinars state
-  const [webinars, setWebinars] = useState({
-    'ai-education': false,
-    'online-teaching': false,
-    'learning-communities': false,
-    'data-driven': false,
-    'student-success': false,
-  });
+  const [selectedLearnerType, setSelectedLearnerType] = useState<string>('');
+  const [learnerSubFilters, setLearnerSubFilters] = useState<Record<string, boolean>>({});
+  const [learnerSearch, setLearnerSearch] = useState('');
 
   const handleApply = () => {
     // Save all selected filters to data
@@ -85,12 +65,80 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
         marketplaceInstitutes,
         whiteLabelInstitutes,
         membership,
-        learners,
-        courses,
-        webinars,
+        learners: {
+          type: selectedLearnerType,
+          subFilters: learnerSubFilters,
+        },
       }
     });
     onOpenChange(false);
+  };
+
+  // Mock data for courses and webinars
+  const premiumCourses = [
+    'Advanced Data Analytics',
+    'Project Management Essentials',
+    'Digital Marketing Masterclass',
+    'Leadership and Team Building',
+    'Business Strategy',
+  ];
+
+  const freeCourses = [
+    'Introduction to Marketing',
+    'Basic Programming',
+    'Communication Skills',
+    'Time Management',
+    'Public Speaking',
+  ];
+
+  const premiumWebinars = [
+    'Future of AI in Education',
+    'Data-Driven Decision Making',
+    'Student Success and Retention',
+    'Advanced Teaching Methods',
+  ];
+
+  const freeWebinars = [
+    'Effective Online Teaching Strategies',
+    'Building Engaged Learning Communities',
+    'Introduction to EdTech',
+    'Classroom Management Basics',
+  ];
+
+  const allCourses = [...premiumCourses, ...freeCourses];
+  
+  const getSubFilterOptions = () => {
+    switch (selectedLearnerType) {
+      case 'premium-courses':
+        return premiumCourses;
+      case 'free-courses':
+        return freeCourses;
+      case 'premium-webinars':
+        return premiumWebinars;
+      case 'free-webinars':
+        return freeWebinars;
+      case 'course-preview':
+      case 'expired':
+        return allCourses;
+      default:
+        return [];
+    }
+  };
+
+  const filteredSubOptions = getSubFilterOptions().filter(option =>
+    option.toLowerCase().includes(learnerSearch.toLowerCase())
+  );
+
+  const handleSelectAllSubFilters = () => {
+    const newFilters: Record<string, boolean> = {};
+    getSubFilterOptions().forEach(option => {
+      newFilters[option] = true;
+    });
+    setLearnerSubFilters(newFilters);
+  };
+
+  const handleUnselectAllSubFilters = () => {
+    setLearnerSubFilters({});
   };
 
   return (
@@ -395,206 +443,324 @@ export function TargetGroupSheet({ open, onOpenChange, data, onChange }: TargetG
           {/* Learners */}
           <Collapsible open={learnersOpen} onOpenChange={setLearnersOpen}>
             <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg p-3 hover:bg-muted">
-              <span className="font-semibold">Learners</span>
+              <span className="font-semibold">Select Learners</span>
               <ChevronDown className={cn("h-4 w-4 transition-transform", learnersOpen && "rotate-180")} />
             </CollapsibleTrigger>
-            <CollapsibleContent className="px-3 pt-3 space-y-4">
+            <CollapsibleContent className="px-3 pt-3 space-y-2">
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
                   <Checkbox 
-                    id="learners-active" 
-                    checked={learners.active}
-                    onCheckedChange={(checked) => setLearners(prev => ({ ...prev, active: !!checked }))}
+                    id="all-learners" 
+                    checked={selectedLearnerType === 'all-learners'}
+                    onCheckedChange={(checked) => {
+                      setSelectedLearnerType(checked ? 'all-learners' : '');
+                      setLearnerSubFilters({});
+                      setLearnerSearch('');
+                    }}
                   />
-                  <Label htmlFor="learners-active" className="font-normal cursor-pointer">Active</Label>
+                  <Label htmlFor="all-learners" className="font-normal cursor-pointer">All learners</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox 
-                    id="learners-inactive" 
-                    checked={learners.inactive}
-                    onCheckedChange={(checked) => setLearners(prev => ({ ...prev, inactive: !!checked }))}
+                    id="non-subscribers" 
+                    checked={selectedLearnerType === 'non-subscribers'}
+                    onCheckedChange={(checked) => {
+                      setSelectedLearnerType(checked ? 'non-subscribers' : '');
+                      setLearnerSubFilters({});
+                      setLearnerSearch('');
+                    }}
                   />
-                  <Label htmlFor="learners-inactive" className="font-normal cursor-pointer">Inactive</Label>
+                  <Label htmlFor="non-subscribers" className="font-normal cursor-pointer">Non subscribers</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox 
-                    id="learners-expired" 
-                    checked={learners.expired}
-                    onCheckedChange={(checked) => setLearners(prev => ({ ...prev, expired: !!checked }))}
+                    id="premium-courses" 
+                    checked={selectedLearnerType === 'premium-courses'}
+                    onCheckedChange={(checked) => {
+                      setSelectedLearnerType(checked ? 'premium-courses' : '');
+                      setLearnerSubFilters({});
+                      setLearnerSearch('');
+                    }}
                   />
-                  <Label htmlFor="learners-expired" className="font-normal cursor-pointer">Expired</Label>
+                  <Label htmlFor="premium-courses" className="font-normal cursor-pointer">Premium courses</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="free-courses" 
+                    checked={selectedLearnerType === 'free-courses'}
+                    onCheckedChange={(checked) => {
+                      setSelectedLearnerType(checked ? 'free-courses' : '');
+                      setLearnerSubFilters({});
+                      setLearnerSearch('');
+                    }}
+                  />
+                  <Label htmlFor="free-courses" className="font-normal cursor-pointer">Free courses</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="premium-webinars" 
+                    checked={selectedLearnerType === 'premium-webinars'}
+                    onCheckedChange={(checked) => {
+                      setSelectedLearnerType(checked ? 'premium-webinars' : '');
+                      setLearnerSubFilters({});
+                      setLearnerSearch('');
+                    }}
+                  />
+                  <Label htmlFor="premium-webinars" className="font-normal cursor-pointer">Premium webinars</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="free-webinars" 
+                    checked={selectedLearnerType === 'free-webinars'}
+                    onCheckedChange={(checked) => {
+                      setSelectedLearnerType(checked ? 'free-webinars' : '');
+                      setLearnerSubFilters({});
+                      setLearnerSearch('');
+                    }}
+                  />
+                  <Label htmlFor="free-webinars" className="font-normal cursor-pointer">Free webinars</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="course-preview" 
+                    checked={selectedLearnerType === 'course-preview'}
+                    onCheckedChange={(checked) => {
+                      setSelectedLearnerType(checked ? 'course-preview' : '');
+                      setLearnerSubFilters({});
+                      setLearnerSearch('');
+                    }}
+                  />
+                  <Label htmlFor="course-preview" className="font-normal cursor-pointer">Course preview</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="expired" 
+                    checked={selectedLearnerType === 'expired'}
+                    onCheckedChange={(checked) => {
+                      setSelectedLearnerType(checked ? 'expired' : '');
+                      setLearnerSubFilters({});
+                      setLearnerSearch('');
+                    }}
+                  />
+                  <Label htmlFor="expired" className="font-normal cursor-pointer">Expired</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="payment-initiated" 
+                    checked={selectedLearnerType === 'payment-initiated'}
+                    onCheckedChange={(checked) => {
+                      setSelectedLearnerType(checked ? 'payment-initiated' : '');
+                      setLearnerSubFilters({});
+                      setLearnerSearch('');
+                    }}
+                  />
+                  <Label htmlFor="payment-initiated" className="font-normal cursor-pointer">Payment initiated</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="payment-failed" 
+                    checked={selectedLearnerType === 'payment-failed'}
+                    onCheckedChange={(checked) => {
+                      setSelectedLearnerType(checked ? 'payment-failed' : '');
+                      setLearnerSubFilters({});
+                      setLearnerSearch('');
+                    }}
+                  />
+                  <Label htmlFor="payment-failed" className="font-normal cursor-pointer">Payment failed</Label>
                 </div>
               </div>
 
-              <div className="space-y-3 pt-2 border-t">
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="courses" defaultChecked />
-                  <Label htmlFor="courses" className="font-medium cursor-pointer">Courses</Label>
-                </div>
-                <div className="ml-6 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Button 
-                      variant="link" 
-                      size="sm" 
-                      className="h-auto p-0 text-xs"
-                      onClick={() => setCourses({
-                        'intro-marketing': true,
-                        'data-analytics': true,
-                        'project-mgmt': true,
-                        'digital-marketing': true,
-                        'leadership': true,
-                      })}
-                    >
-                      Select All
-                    </Button>
-                    <Button 
-                      variant="link" 
-                      size="sm" 
-                      className="h-auto p-0 text-xs"
-                      onClick={() => setCourses({
-                        'intro-marketing': false,
-                        'data-analytics': false,
-                        'project-mgmt': false,
-                        'digital-marketing': false,
-                        'leadership': false,
-                      })}
-                    >
-                      Unselect All
-                    </Button>
-                  </div>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Search courses..." className="pl-9 h-9 text-sm" />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="intro-marketing" 
-                        checked={courses['intro-marketing']}
-                        onCheckedChange={(checked) => setCourses(prev => ({ ...prev, 'intro-marketing': !!checked }))}
-                      />
-                      <Label htmlFor="intro-marketing" className="text-sm font-normal cursor-pointer">Introduction to Marketing</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="data-analytics" 
-                        checked={courses['data-analytics']}
-                        onCheckedChange={(checked) => setCourses(prev => ({ ...prev, 'data-analytics': !!checked }))}
-                      />
-                      <Label htmlFor="data-analytics" className="text-sm font-normal cursor-pointer">Advanced Data Analytics</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="project-mgmt" 
-                        checked={courses['project-mgmt']}
-                        onCheckedChange={(checked) => setCourses(prev => ({ ...prev, 'project-mgmt': !!checked }))}
-                      />
-                      <Label htmlFor="project-mgmt" className="text-sm font-normal cursor-pointer">Project Management Essentials</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="digital-marketing" 
-                        checked={courses['digital-marketing']}
-                        onCheckedChange={(checked) => setCourses(prev => ({ ...prev, 'digital-marketing': !!checked }))}
-                      />
-                      <Label htmlFor="digital-marketing" className="text-sm font-normal cursor-pointer">Digital Marketing Masterclass</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="leadership" 
-                        checked={courses['leadership']}
-                        onCheckedChange={(checked) => setCourses(prev => ({ ...prev, 'leadership': !!checked }))}
-                      />
-                      <Label htmlFor="leadership" className="text-sm font-normal cursor-pointer">Leadership and Team Building</Label>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Sub-filters for options that need them */}
+              {selectedLearnerType && !['all-learners', 'non-subscribers'].includes(selectedLearnerType) && (
+                <div className="mt-4 pt-4 border-t space-y-3">
+                  {['payment-initiated', 'payment-failed'].includes(selectedLearnerType) ? (
+                    // For payment-initiated and payment-failed, show courses and webinars separately
+                    <>
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium">Courses</Label>
+                        <div className="ml-4 space-y-2">
+                          <div className="flex items-center justify-between">
+                            <Button 
+                              variant="link" 
+                              size="sm" 
+                              className="h-auto p-0 text-xs"
+                              onClick={() => {
+                                const newFilters = { ...learnerSubFilters };
+                                allCourses.forEach(course => {
+                                  newFilters[`course-${course}`] = true;
+                                });
+                                setLearnerSubFilters(newFilters);
+                              }}
+                            >
+                              Select All Courses
+                            </Button>
+                            <Button 
+                              variant="link" 
+                              size="sm" 
+                              className="h-auto p-0 text-xs"
+                              onClick={() => {
+                                const newFilters = { ...learnerSubFilters };
+                                allCourses.forEach(course => {
+                                  delete newFilters[`course-${course}`];
+                                });
+                                setLearnerSubFilters(newFilters);
+                              }}
+                            >
+                              Unselect All
+                            </Button>
+                          </div>
+                          <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input 
+                              placeholder="Search courses..." 
+                              className="pl-9 h-9 text-sm"
+                              value={learnerSearch}
+                              onChange={(e) => setLearnerSearch(e.target.value)}
+                            />
+                          </div>
+                          <div className="space-y-2 max-h-48 overflow-y-auto">
+                            {allCourses
+                              .filter(course => course.toLowerCase().includes(learnerSearch.toLowerCase()))
+                              .map((course) => (
+                                <div key={`course-${course}`} className="flex items-center space-x-2">
+                                  <Checkbox 
+                                    id={`course-${course}`}
+                                    checked={learnerSubFilters[`course-${course}`] || false}
+                                    onCheckedChange={(checked) => {
+                                      setLearnerSubFilters(prev => ({
+                                        ...prev,
+                                        [`course-${course}`]: !!checked
+                                      }));
+                                    }}
+                                  />
+                                  <Label htmlFor={`course-${course}`} className="text-sm font-normal cursor-pointer">
+                                    {course}
+                                  </Label>
+                                </div>
+                              ))}
+                          </div>
+                        </div>
+                      </div>
 
-              <div className="space-y-3 pt-2 border-t">
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="webinars" defaultChecked />
-                  <Label htmlFor="webinars" className="font-medium cursor-pointer">Webinars</Label>
+                      <div className="space-y-2 pt-2 border-t">
+                        <Label className="text-sm font-medium">Webinars</Label>
+                        <div className="ml-4 space-y-2">
+                          <div className="flex items-center justify-between">
+                            <Button 
+                              variant="link" 
+                              size="sm" 
+                              className="h-auto p-0 text-xs"
+                              onClick={() => {
+                                const newFilters = { ...learnerSubFilters };
+                                [...premiumWebinars, ...freeWebinars].forEach(webinar => {
+                                  newFilters[`webinar-${webinar}`] = true;
+                                });
+                                setLearnerSubFilters(newFilters);
+                              }}
+                            >
+                              Select All Webinars
+                            </Button>
+                            <Button 
+                              variant="link" 
+                              size="sm" 
+                              className="h-auto p-0 text-xs"
+                              onClick={() => {
+                                const newFilters = { ...learnerSubFilters };
+                                [...premiumWebinars, ...freeWebinars].forEach(webinar => {
+                                  delete newFilters[`webinar-${webinar}`];
+                                });
+                                setLearnerSubFilters(newFilters);
+                              }}
+                            >
+                              Unselect All
+                            </Button>
+                          </div>
+                          <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input 
+                              placeholder="Search webinars..." 
+                              className="pl-9 h-9 text-sm"
+                              value={learnerSearch}
+                              onChange={(e) => setLearnerSearch(e.target.value)}
+                            />
+                          </div>
+                          <div className="space-y-2 max-h-48 overflow-y-auto">
+                            {[...premiumWebinars, ...freeWebinars]
+                              .filter(webinar => webinar.toLowerCase().includes(learnerSearch.toLowerCase()))
+                              .map((webinar) => (
+                                <div key={`webinar-${webinar}`} className="flex items-center space-x-2">
+                                  <Checkbox 
+                                    id={`webinar-${webinar}`}
+                                    checked={learnerSubFilters[`webinar-${webinar}`] || false}
+                                    onCheckedChange={(checked) => {
+                                      setLearnerSubFilters(prev => ({
+                                        ...prev,
+                                        [`webinar-${webinar}`]: !!checked
+                                      }));
+                                    }}
+                                  />
+                                  <Label htmlFor={`webinar-${webinar}`} className="text-sm font-normal cursor-pointer">
+                                    {webinar}
+                                  </Label>
+                                </div>
+                              ))}
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    // For other options, show the appropriate list
+                    <>
+                      <div className="flex items-center justify-between">
+                        <Button 
+                          variant="link" 
+                          size="sm" 
+                          className="h-auto p-0 text-xs"
+                          onClick={handleSelectAllSubFilters}
+                        >
+                          Select All
+                        </Button>
+                        <Button 
+                          variant="link" 
+                          size="sm" 
+                          className="h-auto p-0 text-xs"
+                          onClick={handleUnselectAllSubFilters}
+                        >
+                          Unselect All
+                        </Button>
+                      </div>
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input 
+                          placeholder={`Search ${selectedLearnerType.includes('webinar') ? 'webinars' : 'courses'}...`}
+                          className="pl-9 h-9 text-sm"
+                          value={learnerSearch}
+                          onChange={(e) => setLearnerSearch(e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2 max-h-64 overflow-y-auto">
+                        {filteredSubOptions.map((option) => (
+                          <div key={option} className="flex items-center space-x-2">
+                            <Checkbox 
+                              id={option}
+                              checked={learnerSubFilters[option] || false}
+                              onCheckedChange={(checked) => {
+                                setLearnerSubFilters(prev => ({
+                                  ...prev,
+                                  [option]: !!checked
+                                }));
+                              }}
+                            />
+                            <Label htmlFor={option} className="text-sm font-normal cursor-pointer">
+                              {option}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
-                <div className="ml-6 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Button 
-                      variant="link" 
-                      size="sm" 
-                      className="h-auto p-0 text-xs"
-                      onClick={() => setWebinars({
-                        'ai-education': true,
-                        'online-teaching': true,
-                        'learning-communities': true,
-                        'data-driven': true,
-                        'student-success': true,
-                      })}
-                    >
-                      Select All
-                    </Button>
-                    <Button 
-                      variant="link" 
-                      size="sm" 
-                      className="h-auto p-0 text-xs"
-                      onClick={() => setWebinars({
-                        'ai-education': false,
-                        'online-teaching': false,
-                        'learning-communities': false,
-                        'data-driven': false,
-                        'student-success': false,
-                      })}
-                    >
-                      Unselect All
-                    </Button>
-                  </div>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Search webinars..." className="pl-9 h-9 text-sm" />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="ai-education" 
-                        checked={webinars['ai-education']}
-                        onCheckedChange={(checked) => setWebinars(prev => ({ ...prev, 'ai-education': !!checked }))}
-                      />
-                      <Label htmlFor="ai-education" className="text-sm font-normal cursor-pointer">Future of AI in Education</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="online-teaching" 
-                        checked={webinars['online-teaching']}
-                        onCheckedChange={(checked) => setWebinars(prev => ({ ...prev, 'online-teaching': !!checked }))}
-                      />
-                      <Label htmlFor="online-teaching" className="text-sm font-normal cursor-pointer">Effective Online Teaching Strategies</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="learning-communities" 
-                        checked={webinars['learning-communities']}
-                        onCheckedChange={(checked) => setWebinars(prev => ({ ...prev, 'learning-communities': !!checked }))}
-                      />
-                      <Label htmlFor="learning-communities" className="text-sm font-normal cursor-pointer">Building Engaged Learning Communities</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="data-driven" 
-                        checked={webinars['data-driven']}
-                        onCheckedChange={(checked) => setWebinars(prev => ({ ...prev, 'data-driven': !!checked }))}
-                      />
-                      <Label htmlFor="data-driven" className="text-sm font-normal cursor-pointer">Data-Driven Decision Making</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="student-success" 
-                        checked={webinars['student-success']}
-                        onCheckedChange={(checked) => setWebinars(prev => ({ ...prev, 'student-success': !!checked }))}
-                      />
-                      <Label htmlFor="student-success" className="text-sm font-normal cursor-pointer">Student Success and Retention</Label>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              )}
             </CollapsibleContent>
           </Collapsible>
         </div>

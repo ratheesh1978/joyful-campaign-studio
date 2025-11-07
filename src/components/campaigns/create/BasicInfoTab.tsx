@@ -26,7 +26,7 @@ export function BasicInfoTab({ data, onChange, onNext }: BasicInfoTabProps) {
     const filters: string[] = [];
     let totalUsers = 0;
     
-    const { marketplaceInstitutes, whiteLabelInstitutes, membership, learners, courses, webinars } = data.targetFilters;
+    const { marketplaceInstitutes, whiteLabelInstitutes, membership, learners } = data.targetFilters;
     
     // Marketplace Institutes
     if (marketplaceInstitutes) {
@@ -61,37 +61,19 @@ export function BasicInfoTab({ data, onChange, onNext }: BasicInfoTabProps) {
       });
     }
     
-    // Learners
-    if (learners) {
-      Object.entries(learners).forEach(([key, value]) => {
-        if (value) {
-          const label = key.charAt(0).toUpperCase() + key.slice(1);
-          filters.push(`Learners: ${label}`);
-          totalUsers += Math.floor(Math.random() * 1000) + 300;
+    // Learners (new structure)
+    if (learners?.type) {
+      const label = learners.type.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      filters.push(`Learners: ${label}`);
+      totalUsers += Math.floor(Math.random() * 1000) + 300;
+      
+      // Add sub-filters count if available
+      if (learners.subFilters) {
+        const selectedSubFilters = Object.values(learners.subFilters).filter(Boolean).length;
+        if (selectedSubFilters > 0) {
+          filters.push(`(${selectedSubFilters} items selected)`);
         }
-      });
-    }
-    
-    // Courses
-    if (courses) {
-      Object.entries(courses).forEach(([key, value]) => {
-        if (value) {
-          const label = key.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-          filters.push(`Course: ${label}`);
-          totalUsers += Math.floor(Math.random() * 400) + 150;
-        }
-      });
-    }
-    
-    // Webinars
-    if (webinars) {
-      Object.entries(webinars).forEach(([key, value]) => {
-        if (value) {
-          const label = key.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-          filters.push(`Webinar: ${label}`);
-          totalUsers += Math.floor(Math.random() * 600) + 100;
-        }
-      });
+      }
     }
     
     return { filters, totalUsers };
