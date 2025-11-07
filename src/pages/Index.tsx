@@ -323,10 +323,9 @@ const Index = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[35%]">CAMPAIGN</TableHead>
-                <TableHead className="w-[15%]">TYPE</TableHead>
-                <TableHead className="w-[15%]">STATUS</TableHead>
-                <TableHead className="w-[20%]">CREATED</TableHead>
+                <TableHead className="w-[40%]">CAMPAIGN</TableHead>
+                <TableHead className="w-[20%]">STATUS</TableHead>
+                <TableHead className="w-[25%]">CREATED</TableHead>
                 <TableHead className="w-[15%] text-right">ACTIONS</TableHead>
               </TableRow>
             </TableHeader>
@@ -335,12 +334,6 @@ const Index = () => {
                 <TableRow key={campaign.id}>
                   <TableCell>
                     <div className="font-semibold text-foreground">{campaign.title}</div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2 text-info">
-                      <Mail className="h-4 w-4" />
-                      <span>{campaign.type}</span>
-                    </div>
                   </TableCell>
                   <TableCell>
                     <Badge 
