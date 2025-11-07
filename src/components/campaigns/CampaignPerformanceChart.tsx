@@ -9,6 +9,7 @@ interface CampaignPerformanceChartProps {
     clicked: number;
     bounced: number;
     unsubscribed: number;
+    spam?: number;
   };
 }
 
@@ -22,6 +23,7 @@ export function CampaignPerformanceChart({ stats }: CampaignPerformanceChartProp
     { label: "Clicked", value: stats.clicked, color: "bg-chart-3", percentage: (stats.clicked / maxValue) * 100 },
     { label: "Unsubscribed", value: stats.unsubscribed, color: "bg-destructive", percentage: (stats.unsubscribed / maxValue) * 100 },
     { label: "Bounced", value: stats.bounced, color: "bg-warning", percentage: (stats.bounced / maxValue) * 100 },
+    ...(stats.spam !== undefined ? [{ label: "Moved to Spam", value: stats.spam, color: "bg-amber-500", percentage: (stats.spam / maxValue) * 100 }] : []),
   ];
 
   return (

@@ -20,7 +20,7 @@ const CampaignDetails = () => {
   const [filterType, setFilterType] = useState("email");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  const availableTags = ["Delivered", "Bounced", "Failed", "Opened", "Link Clicked", "Unsubscribed"];
+  const availableTags = ["Delivered", "Bounced", "Failed", "Opened", "Link Clicked", "Unsubscribed", "Moved to Spam"];
 
   const toggleTag = (tag: string) => {
     setSelectedTags(prev => 
@@ -121,6 +121,15 @@ const CampaignDetails = () => {
       avatar: "D",
       color: "bg-violet-500",
     },
+    {
+      id: 11,
+      name: "Amit Patel",
+      email: "amit.patel@example.com",
+      deliveryTime: "04 Nov, 2025 07:30 PM",
+      tags: ["Delivered", "Moved to Spam"],
+      avatar: "A",
+      color: "bg-amber-500",
+    },
   ];
 
   // Calculate campaign metrics from learners data
@@ -132,6 +141,7 @@ const CampaignDetails = () => {
     clicked: learners.filter(l => l.tags.includes("Link Clicked")).length,
     bounced: learners.filter(l => l.tags.includes("Bounced")).length,
     unsubscribed: learners.filter(l => l.tags.includes("Unsubscribed")).length,
+    spam: learners.filter(l => l.tags.includes("Moved to Spam")).length,
   };
 
   // Calculate percentages (avoiding division by zero)
@@ -142,6 +152,7 @@ const CampaignDetails = () => {
   const clickRate = ((campaign.clicked / total) * 100).toFixed(1);
   const bounceRate = ((campaign.bounced / total) * 100).toFixed(1);
   const unsubscribeRate = ((campaign.unsubscribed / total) * 100).toFixed(1);
+  const spamRate = ((campaign.spam / total) * 100).toFixed(1);
 
 
   const filteredLearners = learners.filter((learner) => {
@@ -249,6 +260,18 @@ const CampaignDetails = () => {
                   <div className="space-y-1">
                     <p className="text-4xl font-bold text-orange-600 dark:text-orange-400">{campaign.unsubscribed}</p>
                     <p className="text-sm text-orange-900/70 dark:text-orange-100/70">Unsubscribed</p>
+                  </div>
+                </Card>
+
+                {/* Moved to Spam */}
+                <Card className="p-6 bg-amber-50 dark:bg-amber-950/20 border-amber-100 dark:border-amber-900">
+                  <div className="flex items-start justify-between mb-4">
+                    <Mail className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+                    <span className="text-sm font-medium text-amber-900 dark:text-amber-100">{spamRate}%</span>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-4xl font-bold text-amber-600 dark:text-amber-400">{campaign.spam}</p>
+                    <p className="text-sm text-amber-900/70 dark:text-amber-100/70">Moved to Spam</p>
                   </div>
                 </Card>
               </div>
@@ -365,9 +388,10 @@ const CampaignDetails = () => {
                                 "Delivered": "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-300 hover:bg-green-200",
                                 "Bounced": "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 hover:bg-red-200",
                                 "Failed": "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 hover:bg-red-200",
-                                "Opened": "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 hover:bg-blue-200",
-                                "Link Clicked": "bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 hover:bg-purple-200",
-                                "Unsubscribed": "bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300 hover:bg-orange-200",
+                                 "Opened": "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 hover:bg-blue-200",
+                                 "Link Clicked": "bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 hover:bg-purple-200",
+                                 "Unsubscribed": "bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300 hover:bg-orange-200",
+                                 "Moved to Spam": "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 hover:bg-amber-200",
                               };
                               
                               return (

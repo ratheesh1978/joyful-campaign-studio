@@ -31,6 +31,7 @@ const Index = () => {
     clicked: 245,
     bounced: 15,
     unsubscribed: 8,
+    spam: 12,
   };
 
   const whatsappStats = {
@@ -40,6 +41,7 @@ const Index = () => {
     clicked: 456,
     bounced: 8,
     unsubscribed: 3,
+    spam: 5,
   };
 
   const stats = activeTab === "email" ? emailStats : whatsappStats;
@@ -52,7 +54,7 @@ const Index = () => {
       date: "11/4/2025",
       status: "sent" as const,
       type: "Email",
-      metrics: { sent: 150, delivered: 145, opened: 100, clicked: 45, bounced: 5, unsubscribed: 2 }
+      metrics: { sent: 150, delivered: 145, opened: 100, clicked: 45, bounced: 5, unsubscribed: 2, spam: 3 }
     },
     {
       id: 2,
@@ -61,7 +63,7 @@ const Index = () => {
       date: "11/4/2025",
       status: "sent" as const,
       type: "Email",
-      metrics: { sent: 200, delivered: 198, opened: 120, clicked: 60, bounced: 2, unsubscribed: 1 }
+      metrics: { sent: 200, delivered: 198, opened: 120, clicked: 60, bounced: 2, unsubscribed: 1, spam: 2 }
     },
     {
       id: 3,
@@ -70,7 +72,7 @@ const Index = () => {
       date: "11/3/2025",
       status: "sent" as const,
       type: "Email",
-      metrics: { sent: 100, delivered: 97, opened: 80, clicked: 35, bounced: 3, unsubscribed: 1 }
+      metrics: { sent: 100, delivered: 97, opened: 80, clicked: 35, bounced: 3, unsubscribed: 1, spam: 2 }
     },
     {
       id: 4,
@@ -79,7 +81,7 @@ const Index = () => {
       date: "11/3/2025",
       status: "sent" as const,
       type: "Email",
-      metrics: { sent: 180, delivered: 178, opened: 130, clicked: 70, bounced: 2, unsubscribed: 3 }
+      metrics: { sent: 180, delivered: 178, opened: 130, clicked: 70, bounced: 2, unsubscribed: 3, spam: 2 }
     },
     {
       id: 5,
@@ -88,7 +90,7 @@ const Index = () => {
       date: "11/3/2025",
       status: "draft" as const,
       type: "Email",
-      metrics: { sent: 0, delivered: 0, opened: 0, clicked: 0, bounced: 0, unsubscribed: 0 }
+      metrics: { sent: 0, delivered: 0, opened: 0, clicked: 0, bounced: 0, unsubscribed: 0, spam: 0 }
     },
     {
       id: 6,
@@ -97,7 +99,7 @@ const Index = () => {
       date: "11/3/2025",
       status: "draft" as const,
       type: "Email",
-      metrics: { sent: 0, delivered: 0, opened: 0, clicked: 0, bounced: 0, unsubscribed: 0 }
+      metrics: { sent: 0, delivered: 0, opened: 0, clicked: 0, bounced: 0, unsubscribed: 0, spam: 0 }
     },
     {
       id: 7,
@@ -106,7 +108,7 @@ const Index = () => {
       date: "11/3/2025",
       status: "sent" as const,
       type: "Email",
-      metrics: { sent: 120, delivered: 117, opened: 70, clicked: 35, bounced: 3, unsubscribed: 1 }
+      metrics: { sent: 120, delivered: 117, opened: 70, clicked: 35, bounced: 3, unsubscribed: 1, spam: 3 }
     },
   ];
 
@@ -325,6 +327,18 @@ const Index = () => {
             colorClass="bg-destructive/10 text-destructive"
             onClick={() => setMetricFilter(metricFilter === "unsubscribed" ? null : "unsubscribed")}
             isActive={metricFilter === "unsubscribed"}
+          />
+        </div>
+
+        {/* Second Row - Spam */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          <StatCard
+            icon={Mail}
+            label="Moved to Spam"
+            value={stats.spam}
+            colorClass="bg-amber-500/10 text-amber-600 dark:text-amber-400"
+            onClick={() => setMetricFilter(metricFilter === "spam" ? null : "spam")}
+            isActive={metricFilter === "spam"}
           />
         </div>
 
