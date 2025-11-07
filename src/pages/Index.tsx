@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mail, MessageSquare, Plus, Send, Eye, MousePointerClick, XCircle, UserX, Calendar as CalendarIcon, Search } from "lucide-react";
+import { Mail, MessageSquare, Plus, Send, Eye, MousePointerClick, XCircle, UserX, Calendar as CalendarIcon, Search, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { StatCard } from "@/components/campaigns/StatCard";
 import { PerformanceChart } from "@/components/campaigns/PerformanceChart";
@@ -27,6 +27,7 @@ const Index = () => {
 
   const emailStats = {
     sent: 750,
+    delivered: 735,
     opened: 500,
     clicked: 245,
     bounced: 15,
@@ -35,6 +36,7 @@ const Index = () => {
 
   const whatsappStats = {
     sent: 1200,
+    delivered: 1192,
     opened: 980,
     clicked: 456,
     bounced: 8,
@@ -176,12 +178,18 @@ const Index = () => {
       <main className="container mx-auto px-6 py-8">
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
           <StatCard
             icon={Send}
             label="Sent"
             value={stats.sent}
             colorClass="bg-info/10 text-info"
+          />
+          <StatCard
+            icon={CheckCircle2}
+            label="Delivered"
+            value={stats.delivered}
+            colorClass="bg-primary/10 text-primary"
           />
           <StatCard
             icon={Eye}

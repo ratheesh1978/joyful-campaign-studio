@@ -4,6 +4,7 @@ import { Progress } from "@/components/ui/progress";
 interface CampaignPerformanceChartProps {
   stats: {
     sent: number;
+    delivered: number;
     opened: number;
     clicked: number;
     bounced: number;
@@ -16,6 +17,7 @@ export function CampaignPerformanceChart({ stats }: CampaignPerformanceChartProp
 
   const metrics = [
     { label: "Sent", value: stats.sent, color: "bg-info", percentage: 100 },
+    { label: "Delivered", value: stats.delivered, color: "bg-primary", percentage: (stats.delivered / maxValue) * 100 },
     { label: "Opened", value: stats.opened, color: "bg-success", percentage: (stats.opened / maxValue) * 100 },
     { label: "Clicked", value: stats.clicked, color: "bg-chart-3", percentage: (stats.clicked / maxValue) * 100 },
     { label: "Unsubscribed", value: stats.unsubscribed, color: "bg-destructive", percentage: (stats.unsubscribed / maxValue) * 100 },

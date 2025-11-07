@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ArrowLeft, Mail, BarChart2, Sparkles, XCircle, UserMinus, FileDown, ArrowUpRight, Info, ChevronDown, Smartphone, Send } from "lucide-react";
+import { ArrowLeft, Mail, BarChart2, Sparkles, XCircle, UserMinus, FileDown, ArrowUpRight, Info, ChevronDown, Smartphone, Send, CheckCircle2 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -127,6 +127,7 @@ const CampaignDetails = () => {
   const campaign = {
     title: "Q1 2025 New Features Launch",
     sent: learners.length,
+    delivered: learners.filter(l => l.tags.includes("Delivered")).length,
     opened: learners.filter(l => l.tags.includes("Opened")).length,
     clicked: learners.filter(l => l.tags.includes("Link Clicked")).length,
     bounced: learners.filter(l => l.tags.includes("Bounced")).length,
@@ -136,6 +137,7 @@ const CampaignDetails = () => {
   // Calculate percentages (avoiding division by zero)
   const total = campaign.sent || 1;
   const sentRate = 100;
+  const deliveredRate = ((campaign.delivered / total) * 100).toFixed(1);
   const openRate = ((campaign.opened / total) * 100).toFixed(1);
   const clickRate = ((campaign.clicked / total) * 100).toFixed(1);
   const bounceRate = ((campaign.bounced / total) * 100).toFixed(1);
@@ -177,16 +179,28 @@ const CampaignDetails = () => {
             {/* Campaign Metrics */}
             <div>
               <h2 className="text-xl font-semibold mb-4">Campaign Metrics</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                 {/* Sent */}
                 <Card className="p-6 bg-blue-50 dark:bg-blue-950/20 border-blue-100 dark:border-blue-900">
                   <div className="flex items-start justify-between mb-4">
-                    <Mail className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                    <Send className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     <span className="text-sm font-medium text-blue-900 dark:text-blue-100">{sentRate}%</span>
                   </div>
                   <div className="space-y-1">
                     <p className="text-4xl font-bold text-blue-600 dark:text-blue-400">{campaign.sent}</p>
                     <p className="text-sm text-blue-900/70 dark:text-blue-100/70">Sent</p>
+                  </div>
+                </Card>
+
+                {/* Delivered */}
+                <Card className="p-6 bg-cyan-50 dark:bg-cyan-950/20 border-cyan-100 dark:border-cyan-900">
+                  <div className="flex items-start justify-between mb-4">
+                    <CheckCircle2 className="h-6 w-6 text-cyan-600 dark:text-cyan-400" />
+                    <span className="text-sm font-medium text-cyan-900 dark:text-cyan-100">{deliveredRate}%</span>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-4xl font-bold text-cyan-600 dark:text-cyan-400">{campaign.delivered}</p>
+                    <p className="text-sm text-cyan-900/70 dark:text-cyan-100/70">Delivered</p>
                   </div>
                 </Card>
 
