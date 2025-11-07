@@ -5,7 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Mail, MessageSquare, Plus, Send, Eye, MousePointerClick, XCircle, UserX, Calendar as CalendarIcon, Search, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { StatCard } from "@/components/campaigns/StatCard";
-import { CampaignPerformanceChart } from "@/components/campaigns/CampaignPerformanceChart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -168,6 +167,105 @@ const Index = () => {
       {/* Main Content */}
       <main className="container mx-auto px-6 py-8">
 
+        {/* Filters Section */}
+        <Card className="p-4 mb-8">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search campaigns..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full md:w-[180px]">
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="sent">Sent</SelectItem>
+                <SelectItem value="draft">Draft</SelectItem>
+              </SelectContent>
+            </Select>
+            <div className="flex flex-col gap-2 w-full md:w-auto">
+              <Select value={dateFilterType} onValueChange={(value) => {
+                setDateFilterType(value);
+                if (value === "all") {
+                  setSelectedDate(undefined);
+                  setSelectedDateEnd(undefined);
+                }
+              }}>
+                <SelectTrigger className="w-full md:w-[180px]">
+                  <SelectValue placeholder="Created On" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Dates</SelectItem>
+                  <SelectItem value="on">On</SelectItem>
+                  <SelectItem value="before">Before</SelectItem>
+                  <SelectItem value="after">After</SelectItem>
+                  <SelectItem value="between">Between</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              {dateFilterType !== "all" && (
+                <div className="flex gap-2">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full md:w-[180px] justify-start text-left font-normal",
+                          !selectedDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={setSelectedDate}
+                        initialFocus
+                        className="pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  
+                  {dateFilterType === "between" && (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full md:w-[180px] justify-start text-left font-normal",
+                            !selectedDateEnd && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {selectedDateEnd ? format(selectedDateEnd, "PPP") : <span>End date</span>}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={selectedDateEnd}
+                          onSelect={setSelectedDateEnd}
+                          initialFocus
+                          className="pointer-events-auto"
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </Card>
+
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
           <StatCard
@@ -208,152 +306,51 @@ const Index = () => {
           />
         </div>
 
-        {/* Main Content Grid - Table and Performance Chart */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left Column - Campaigns Table */}
-          <Card>
-            <div className="p-4 border-b flex flex-col md:flex-row gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search campaigns..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9"
-                />
-              </div>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-full md:w-[180px]">
-                  <SelectValue placeholder="Filter by status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="sent">Sent</SelectItem>
-                  <SelectItem value="draft">Draft</SelectItem>
-                </SelectContent>
-              </Select>
-              <div className="flex flex-col gap-2 w-full md:w-auto">
-                <Select value={dateFilterType} onValueChange={(value) => {
-                  setDateFilterType(value);
-                  if (value === "all") {
-                    setSelectedDate(undefined);
-                    setSelectedDateEnd(undefined);
-                  }
-                }}>
-                  <SelectTrigger className="w-full md:w-[180px]">
-                    <SelectValue placeholder="Created On" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Dates</SelectItem>
-                    <SelectItem value="on">On</SelectItem>
-                    <SelectItem value="before">Before</SelectItem>
-                    <SelectItem value="after">After</SelectItem>
-                    <SelectItem value="between">Between</SelectItem>
-                  </SelectContent>
-                </Select>
-                
-                {dateFilterType !== "all" && (
-                  <div className="flex gap-2">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full md:w-[180px] justify-start text-left font-normal",
-                            !selectedDate && "text-muted-foreground"
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={selectedDate}
-                          onSelect={setSelectedDate}
-                          initialFocus
-                          className="pointer-events-auto"
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    
-                    {dateFilterType === "between" && (
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            className={cn(
-                              "w-full md:w-[180px] justify-start text-left font-normal",
-                              !selectedDateEnd && "text-muted-foreground"
-                            )}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {selectedDateEnd ? format(selectedDateEnd, "PPP") : <span>End date</span>}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={selectedDateEnd}
-                            onSelect={setSelectedDateEnd}
-                            initialFocus
-                            className="pointer-events-auto"
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[40%]">CAMPAIGN</TableHead>
-                  <TableHead className="w-[20%]">STATUS</TableHead>
-                  <TableHead className="w-[25%]">CREATED</TableHead>
-                  <TableHead className="w-[15%] text-right">ACTIONS</TableHead>
+        {/* Campaigns Table */}
+        <Card>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[40%]">CAMPAIGN</TableHead>
+                <TableHead className="w-[20%]">STATUS</TableHead>
+                <TableHead className="w-[25%]">CREATED</TableHead>
+                <TableHead className="w-[15%] text-right">ACTIONS</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredCampaigns.map((campaign) => (
+                <TableRow key={campaign.id}>
+                  <TableCell>
+                    <div className="font-semibold text-foreground">{campaign.title}</div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge 
+                      variant={campaign.status === "sent" ? "default" : "secondary"}
+                      className={campaign.status === "sent" ? "bg-success text-success-foreground" : ""}
+                    >
+                      {campaign.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <CalendarIcon className="h-4 w-4" />
+                      <span>{campaign.date}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      variant="link"
+                      className="text-info hover:text-info/80 p-0"
+                      onClick={() => navigate(campaign.status === "draft" ? "/create-campaign" : `/campaign/${campaign.id}`)}
+                    >
+                      View Details
+                    </Button>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredCampaigns.map((campaign) => (
-                  <TableRow key={campaign.id}>
-                    <TableCell>
-                      <div className="font-semibold text-foreground">{campaign.title}</div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge 
-                        variant={campaign.status === "sent" ? "default" : "secondary"}
-                        className={campaign.status === "sent" ? "bg-success text-success-foreground" : ""}
-                      >
-                        {campaign.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <CalendarIcon className="h-4 w-4" />
-                        <span>{campaign.date}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="link"
-                        className="text-info hover:text-info/80 p-0"
-                        onClick={() => navigate(campaign.status === "draft" ? "/create-campaign" : `/campaign/${campaign.id}`)}
-                      >
-                        View Details
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Card>
-
-          {/* Right Column - Overall Performance Chart */}
-          <CampaignPerformanceChart stats={stats} />
-        </div>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
       </main>
     </div>
   );
