@@ -13,17 +13,15 @@ interface StatCardProps {
 export const StatCard = ({ icon: Icon, label, value, colorClass, onClick, isActive }: StatCardProps) => {
   return (
     <Card 
-      className={`p-6 cursor-pointer transition-all hover:shadow-md ${isActive ? 'ring-2 ring-primary' : ''}`}
+      className={`p-4 cursor-pointer transition-all hover:shadow-md ${isActive ? 'ring-2 ring-primary' : ''}`}
       onClick={onClick}
     >
-      <div className="flex items-center gap-4">
-        <div className={`p-3 rounded-lg ${colorClass}`}>
-          <Icon className="h-6 w-6" />
+      <div className="flex flex-col items-center text-center space-y-2">
+        <div className={`p-2 rounded-lg ${colorClass}`}>
+          <Icon className="h-5 w-5" />
         </div>
-        <div>
-          <p className="text-sm text-muted-foreground">{label}</p>
-          <p className="text-3xl font-bold">{value.toLocaleString()}</p>
-        </div>
+        <p className="text-xs text-muted-foreground leading-tight">{label}</p>
+        <p className="text-2xl font-bold">{value.toLocaleString()}</p>
       </div>
     </Card>
   );
