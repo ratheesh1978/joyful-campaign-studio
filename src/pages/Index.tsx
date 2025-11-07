@@ -22,6 +22,7 @@ const Index = () => {
   const [dateFilterType, setDateFilterType] = useState<string>("all");
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedDateEnd, setSelectedDateEnd] = useState<Date>();
+  const [metricFilter, setMetricFilter] = useState<string | null>(null);
 
   const emailStats = {
     sent: 750,
@@ -273,36 +274,48 @@ const Index = () => {
             label="Sent"
             value={stats.sent}
             colorClass="bg-info/10 text-info"
+            onClick={() => setMetricFilter(metricFilter === "sent" ? null : "sent")}
+            isActive={metricFilter === "sent"}
           />
           <StatCard
             icon={CheckCircle2}
             label="Delivered"
             value={stats.delivered}
             colorClass="bg-primary/10 text-primary"
+            onClick={() => setMetricFilter(metricFilter === "delivered" ? null : "delivered")}
+            isActive={metricFilter === "delivered"}
           />
           <StatCard
             icon={Eye}
             label="Opened"
             value={stats.opened}
             colorClass="bg-success/10 text-success"
+            onClick={() => setMetricFilter(metricFilter === "opened" ? null : "opened")}
+            isActive={metricFilter === "opened"}
           />
           <StatCard
             icon={MousePointerClick}
             label="Clicked"
             value={stats.clicked}
             colorClass="bg-chart-3/10 text-chart-3"
+            onClick={() => setMetricFilter(metricFilter === "clicked" ? null : "clicked")}
+            isActive={metricFilter === "clicked"}
           />
           <StatCard
             icon={XCircle}
             label="Bounced"
             value={stats.bounced}
             colorClass="bg-warning/10 text-warning"
+            onClick={() => setMetricFilter(metricFilter === "bounced" ? null : "bounced")}
+            isActive={metricFilter === "bounced"}
           />
           <StatCard
             icon={UserX}
             label="Unsubscribed"
             value={stats.unsubscribed}
             colorClass="bg-destructive/10 text-destructive"
+            onClick={() => setMetricFilter(metricFilter === "unsubscribed" ? null : "unsubscribed")}
+            isActive={metricFilter === "unsubscribed"}
           />
         </div>
 

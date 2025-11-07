@@ -6,11 +6,16 @@ interface StatCardProps {
   label: string;
   value: number;
   colorClass: string;
+  onClick?: () => void;
+  isActive?: boolean;
 }
 
-export const StatCard = ({ icon: Icon, label, value, colorClass }: StatCardProps) => {
+export const StatCard = ({ icon: Icon, label, value, colorClass, onClick, isActive }: StatCardProps) => {
   return (
-    <Card className="p-6">
+    <Card 
+      className={`p-6 cursor-pointer transition-all hover:shadow-md ${isActive ? 'ring-2 ring-primary' : ''}`}
+      onClick={onClick}
+    >
       <div className="flex items-center gap-4">
         <div className={`p-3 rounded-lg ${colorClass}`}>
           <Icon className="h-6 w-6" />
