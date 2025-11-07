@@ -47,6 +47,14 @@ All colors MUST be HSL.
     --chart-4: 38 92% 50%;
     --chart-5: 0 84% 60%;
 
+    --metric-sent: 210 100% 50%;
+    --metric-delivered: 160 85% 45%;
+    --metric-opened: 270 75% 60%;
+    --metric-clicked: 25 95% 55%;
+    --metric-bounced: 45 95% 55%;
+    --metric-unsubscribed: 350 85% 55%;
+    --metric-spam: 15 80% 45%;
+
     --border: 214 32% 91%;
     --input: 214 32% 91%;
     --ring: 200 95% 30%;
@@ -109,6 +117,14 @@ All colors MUST be HSL.
     --chart-3: 262 83% 58%;
     --chart-4: 38 92% 50%;
     --chart-5: 0 84% 60%;
+
+    --metric-sent: 210 100% 60%;
+    --metric-delivered: 160 85% 50%;
+    --metric-opened: 270 75% 65%;
+    --metric-clicked: 25 95% 60%;
+    --metric-bounced: 45 95% 60%;
+    --metric-unsubscribed: 350 85% 60%;
+    --metric-spam: 15 80% 50%;
 
     --border: 217 33% 17%;
     --input: 217 33% 17%;

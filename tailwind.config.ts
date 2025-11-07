@@ -66,6 +66,15 @@ export default {
           4: "hsl(var(--chart-4))",
           5: "hsl(var(--chart-5))",
         },
+        metric: {
+          sent: "hsl(var(--metric-sent))",
+          delivered: "hsl(var(--metric-delivered))",
+          opened: "hsl(var(--metric-opened))",
+          clicked: "hsl(var(--metric-clicked))",
+          bounced: "hsl(var(--metric-bounced))",
+          unsubscribed: "hsl(var(--metric-unsubscribed))",
+          spam: "hsl(var(--metric-spam))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

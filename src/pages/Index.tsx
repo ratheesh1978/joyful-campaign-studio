@@ -284,7 +284,7 @@ const Index = () => {
             icon={Send}
             label="Sent"
             value={stats.sent}
-            colorClass="bg-info/10 text-info"
+            colorClass="bg-metric-sent/10 text-metric-sent"
             onClick={() => setMetricFilter(metricFilter === "sent" ? null : "sent")}
             isActive={metricFilter === "sent"}
           />
@@ -292,7 +292,7 @@ const Index = () => {
             icon={CheckCircle2}
             label="Delivered"
             value={stats.delivered}
-            colorClass="bg-primary/10 text-primary"
+            colorClass="bg-metric-delivered/10 text-metric-delivered"
             onClick={() => setMetricFilter(metricFilter === "delivered" ? null : "delivered")}
             isActive={metricFilter === "delivered"}
           />
@@ -300,7 +300,7 @@ const Index = () => {
             icon={Eye}
             label="Opened"
             value={stats.opened}
-            colorClass="bg-success/10 text-success"
+            colorClass="bg-metric-opened/10 text-metric-opened"
             onClick={() => setMetricFilter(metricFilter === "opened" ? null : "opened")}
             isActive={metricFilter === "opened"}
           />
@@ -308,7 +308,7 @@ const Index = () => {
             icon={MousePointerClick}
             label="Clicked"
             value={stats.clicked}
-            colorClass="bg-chart-3/10 text-chart-3"
+            colorClass="bg-metric-clicked/10 text-metric-clicked"
             onClick={() => setMetricFilter(metricFilter === "clicked" ? null : "clicked")}
             isActive={metricFilter === "clicked"}
           />
@@ -316,7 +316,7 @@ const Index = () => {
             icon={XCircle}
             label="Bounced"
             value={stats.bounced}
-            colorClass="bg-warning/10 text-warning"
+            colorClass="bg-metric-bounced/10 text-metric-bounced"
             onClick={() => setMetricFilter(metricFilter === "bounced" ? null : "bounced")}
             isActive={metricFilter === "bounced"}
           />
@@ -324,7 +324,7 @@ const Index = () => {
             icon={UserX}
             label="Unsubscribed"
             value={stats.unsubscribed}
-            colorClass="bg-destructive/10 text-destructive"
+            colorClass="bg-metric-unsubscribed/10 text-metric-unsubscribed"
             onClick={() => setMetricFilter(metricFilter === "unsubscribed" ? null : "unsubscribed")}
             isActive={metricFilter === "unsubscribed"}
           />
@@ -332,7 +332,7 @@ const Index = () => {
             icon={Mail}
             label="Moved to Spam"
             value={stats.spam}
-            colorClass="bg-amber-500/10 text-amber-600 dark:text-amber-400"
+            colorClass="bg-metric-spam/10 text-metric-spam"
             onClick={() => setMetricFilter(metricFilter === "spam" ? null : "spam")}
             isActive={metricFilter === "spam"}
           />
